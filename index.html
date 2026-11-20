@@ -1,0 +1,2129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dashboard Matriks Kegiatan Pegawai – BPS Kabupaten Kuantan Singingi 2026</title>
+<style>
+:root{
+  --bg:#fbf2e6;
+  --panel:#ffffff;
+  --line:#ecc9a6;
+  --tx:#4a2410;
+  --mut:#a47355;
+  --accent:#dd6b1d;
+  --accent-d:#ad4709;
+  --shadow:0 6px 16px rgba(173,71,9,.12);
+}
+*{box-sizing:border-box;margin:0}
+html{font-size:1.02vw}
+body{
+  background:linear-gradient(135deg,#fdf6ee 0%,#f8e8d6 55%,#f2d9bf 100%);
+  color:var(--tx);
+  font-family:system-ui,"Segoe UI",Roboto,sans-serif;
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0);
+  position:relative;
+}
+
+/* LATAR BELAKANG (STATIS & RINGAN: tanpa blur / animasi agar TV tidak berat) */
+.bg-blobs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-blobs i{position:absolute;border-radius:50%}
+.bg-blobs i:nth-child(1){width:38rem;height:38rem;background:radial-gradient(circle,rgba(231,154,88,.55) 0%,rgba(231,154,88,0) 70%);top:-12rem;left:-10rem}
+.bg-blobs i:nth-child(2){width:32rem;height:32rem;background:radial-gradient(circle,rgba(239,193,151,.6) 0%,rgba(239,193,151,0) 70%);bottom:-11rem;right:-8rem}
+.bg-blobs i:nth-child(3){width:24rem;height:24rem;background:radial-gradient(circle,rgba(240,211,179,.5) 0%,rgba(240,211,179,0) 70%);top:38%;left:46%}
+
+/* HEADER */
+header{
+  position:relative;
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  padding:.62rem 1.5rem;
+  background:linear-gradient(100deg,#dd6b1d 0%,#e5842f 50%,#c4560e 100%);
+  box-shadow:0 4px 14px rgba(173,71,9,.28);
+  z-index:5;color:#fff;
+}
+.brand-wrap{display:flex;align-items:center;gap:.85rem}
+.bps-badge{
+  width:2.9rem;height:2.9rem;border-radius:.8rem;background:#fff;
+  border:2px solid rgba(255,255,255,.95);
+  display:flex;align-items:center;justify-content:center;flex:none;padding:.22rem;
+  box-shadow:0 3px 8px rgba(124,45,18,.25);overflow:hidden;
+}
+.bps-badge img,.bps-badge svg{width:100%;height:100%;object-fit:contain;display:block}
+.brand .agency{font-size:.74rem;font-weight:800;letter-spacing:.14em;color:#fff7ed;text-transform:uppercase;margin-bottom:.08rem;opacity:.95}
+.brand h1{font-size:1.42rem;letter-spacing:.03em;display:flex;align-items:center;gap:.5rem;line-height:1.15;color:#fff;text-shadow:0 2px 6px rgba(124,45,18,.25)}
+.brand small{display:flex;align-items:center;gap:.6rem;color:#fff1e0;font-size:.82rem;margin-top:.12rem}
+
+/* MONTH PILLS */
+.months-bar{
+  display:flex;align-items:center;gap:.38rem;
+  background:rgba(255,255,255,.28);
+  padding:.35rem .55rem;border-radius:.9rem;border:1px solid rgba(255,255,255,.55);
+}
+.m-pill{
+  padding:.32rem .75rem;border-radius:.55rem;font-size:.8rem;font-weight:700;letter-spacing:.03em;
+  color:#fff;cursor:pointer;transition:background .25s ease,transform .25s ease;position:relative;user-select:none;
+}
+.m-pill:hover{background:rgba(255,255,255,.3);transform:translateY(-1px)}
+.m-pill.active{background:#fff;color:#ad4709;box-shadow:0 3px 8px rgba(124,45,18,.22);transform:scale(1.06)}
+.m-pill.now::after{
+  content:"";position:absolute;bottom:3px;left:50%;transform:translateX(-50%);
+  width:5px;height:5px;border-radius:50%;background:#fff;animation:pulse 1.8s infinite;
+}
+.m-pill.active.now::after{background:#ad4709}
+#clock{
+  font-size:2.05rem;font-weight:700;font-variant-numeric:tabular-nums;
+  text-align:right;line-height:1.1;white-space:nowrap;color:#fff;text-shadow:0 2px 6px rgba(124,45,18,.25);
+}
+#clock small{display:block;font-weight:500;font-size:.8rem;color:#fff1e0}
+
+/* PROGRESS BAR (pakai transform agar ringan) */
+.prog-wrap{height:4px;background:#efd0ae;width:100%;overflow:hidden;position:relative;z-index:5}
+.prog-bar{
+  height:100%;width:100%;
+  background:linear-gradient(90deg,#e79a58,#dd6b1d,#c4560e);
+  transform:scaleX(0);transform-origin:left center;will-change:transform;
+}
+
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.75)}}
+
+/* =====================================================================
+   KEPALA (TEMA ORANYE-PUTIH)
+   ===================================================================== */
+.kp{
+  position:relative;z-index:4;
+  display:flex;align-items:center;gap:1.1rem;
+  padding:.48rem 1.5rem;
+  background:rgba(255,255,255,.94);
+  border-bottom:2px solid #dd6b1d;
+  box-shadow:0 3px 10px rgba(173,71,9,.08);
+  color:#4a2410;
+}
+.kp .av{
+  width:2.9rem;height:2.9rem;border-radius:50%;
+  background:linear-gradient(135deg,#e79a58,#c4560e);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.35rem;font-weight:800;
+  box-shadow:0 0 0 4px rgba(221,107,29,.2),0 3px 8px rgba(173,71,9,.3);
+  border:2px solid #fff;overflow:hidden;flex:none;
+}
+.kp .av img{width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block}
+.kp small{display:block;color:#a47355;font-size:.68rem;letter-spacing:.14em;font-weight:600}
+.kp b{font-size:1.3rem;color:#4a2410}
+.kp .st{
+  padding:.38rem 1rem;border-radius:2rem;font-weight:800;font-size:1.02rem;
+  box-shadow:0 3px 8px rgba(173,71,9,.25);display:flex;align-items:center;gap:.5rem;
+}
+.pulse-dot{width:.55rem;height:.55rem;border-radius:50%;background:currentColor;animation:pulse 1.6s infinite}
+.kp .st.rd{background:#dd6b1d;color:#fff}
+.kp .st.lb{background:#f4dcc2;color:#9a3412}
+.kp .st.y{background:#fcd34d;color:#78350f}
+.kp .st.m{background:#c2410c;color:#fff}
+.kp .st.g{background:#f59e0b;color:#fff}
+.kp .st.o{background:#e79a58;color:#7c2d12}
+.kp .st.p{background:#f8dcc0;color:#9a3412;border:1px solid #e79a58}
+.kp .st.b{background:#9a3412;color:#fff}
+.kp .nx{margin-left:auto;color:#a47355;font-size:.88rem;text-align:right;line-height:1.3}
+
+/* MAIN */
+main{flex:1;position:relative;min-height:0;z-index:2}
+.view{
+  position:absolute;inset:0;padding:.65rem 1.2rem;
+  opacity:0;transform:translateY(14px) scale(.99);
+  visibility:hidden;
+  transition:opacity .7s ease, transform .7s cubic-bezier(.22,1,.36,1), visibility 0s linear .7s;
+  pointer-events:none;display:flex;flex-direction:column;
+}
+.view.on{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;visibility:visible;transition-delay:0s}
+
+/* VIEW 0: MATRIKS (TEMA ORANYE-PUTIH, PETAK KEGIATAN TETAP WARNA ASLI) */
+.row{display:grid;grid-template-columns:16.5rem repeat(var(--days,30),1fr);align-items:stretch}
+.hd{
+  background:#fff;font-size:.82rem;text-align:center;font-weight:700;
+  border-radius:.5rem .5rem 0 0;border-top:1px solid var(--line);border-right:1px solid var(--line);color:var(--tx);
+}
+.hd div{padding:.34rem 0;border-left:1px solid var(--line)}
+.hd .we{background:#eecfa9;color:#c2410c}
+.hd .td{
+  background:linear-gradient(180deg,#dd6b1d,#c4560e);color:#fff;box-shadow:inset 0 -3px 0 #fff;
+}
+.nm{
+  padding:0 .6rem;font-size:.88rem;display:flex;align-items:center;gap:.45rem;
+  border-bottom:1px solid var(--line);border-left:1px solid var(--line);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff;
+}
+.row:nth-child(even) .nm{background:#fcf3e8}
+.nm b{color:#c9722f;font-weight:600;width:1.4rem;flex:none}
+.c{border-left:1px solid var(--line);border-bottom:1px solid var(--line);grid-row:1;height:2.42rem;background:#fff}
+.row:nth-child(even) .c{background:#fcf3e8}
+.c.we{background:rgba(231,154,88,.22)!important}
+.c.td{background:rgba(221,107,29,.22)!important}
+.e{
+  grid-row:1;margin:.2rem .08rem;border-radius:.4rem;
+  font-size:.67rem;line-height:1.1;font-weight:700;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:0 .22rem;overflow:hidden;z-index:1;color:#fff;
+  transform-origin:left center;
+  animation:barGrow .6s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes barGrow{from{opacity:0;transform:scaleX(.3)}to{opacity:1;transform:scaleX(1)}}
+/* HANYA PETAK KEGIATAN: WARNA ASLI */
+#v0 .y{background:#facc15;color:#1f2937}
+#v0 .m{background:#d946ef;color:#fff}
+#v0 .g{background:#16a34a;color:#fff}
+#v0 .o{background:#f97316;color:#fff}
+#v0 .p{background:#fed7aa;color:#431407}
+#v0 .b{background:#3b82f6;color:#fff}
+#sc{
+  flex:1;overflow:hidden;border:1px solid var(--line);border-radius:0 0 .7rem .7rem;
+  background:#fff;position:relative;box-shadow:var(--shadow);
+}
+#rows{will-change:transform}
+.bottom-meta{display:flex;justify-content:space-between;align-items:center;padding-top:.45rem;font-size:.82rem;color:var(--mut)}
+#legend{display:flex;gap:1.3rem;flex-wrap:wrap}
+#legend span{display:inline-flex;align-items:center;font-weight:600;color:#7c4a2d}
+#legend i{display:inline-block;width:.85rem;height:.85rem;border-radius:.25rem;margin-right:.35rem;box-shadow:0 0 0 1px rgba(124,45,18,.2)}
+#syncStatus{
+  display:flex;align-items:center;gap:.45rem;font-size:.78rem;
+  background:#fff;padding:.22rem .65rem;border-radius:1rem;border:1px solid var(--line);color:#7c4a2d;
+}
+.dot-sync{width:.5rem;height:.5rem;border-radius:50%;background:#d6b59c}
+.dot-sync.ok{background:#dd6b1d;box-shadow:0 0 6px #dd6b1d}
+.dot-sync.err{background:#dc2626}
+
+/* WARNA TAG (TEMA ORANYE) UNTUK SLIDE LAIN */
+.y{background:#fcd34d;color:#78350f}
+.m{background:#c2410c;color:#fff}
+.g{background:#dd6b1d;color:#fff}
+.o{background:#e79a58;color:#7c2d12}
+.p{background:#f8dcc0;color:#9a3412;box-shadow:inset 0 0 0 1px #e79a58}
+.b{background:#9a3412;color:#fff}
+
+/* VIEW 1: AGENDA */
+.stat{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:.75rem}
+.stat div{
+  background:#fff;border:1px solid var(--line);border-radius:.8rem;padding:.55rem .9rem;
+  font-size:.8rem;color:var(--mut);box-shadow:var(--shadow);
+  animation:riseIn .6s cubic-bezier(.22,1,.36,1) both;
+}
+.stat div:nth-child(2){animation-delay:.08s}
+.stat div:nth-child(3){animation-delay:.16s}
+.stat div:nth-child(4){animation-delay:.24s}
+@keyframes riseIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.stat b{display:block;font-size:1.85rem;color:var(--accent-d);line-height:1.15}
+.cols{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:1rem;flex:1;min-height:0}
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:.9rem;padding:.95rem 1.15rem;
+  overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);
+}
+.card h2{font-size:1.22rem;margin-bottom:.18rem;color:var(--tx)}
+.card .sub{color:var(--mut);font-size:.85rem;margin-bottom:.6rem}
+.card.big{border-color:#dd6b1d;box-shadow:0 0 0 3px rgba(221,107,29,.12),0 8px 18px rgba(173,71,9,.18)}
+.it{
+  display:flex;align-items:center;gap:.6rem;padding:.36rem 0;border-bottom:1px solid #f4dcc6;
+  font-size:.9rem;animation:in .5s both;
+}
+.it span:first-child{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tag{font-size:.7rem;padding:.16rem .52rem;border-radius:.8rem;font-weight:700;white-space:nowrap}
+.none{color:var(--mut);padding:1rem 0;font-size:.92rem}
+@keyframes in{from{opacity:0;transform:translateX(-1rem)}to{opacity:1;transform:none}}
+
+/* VIEW 2: PROFIL */
+.kuansing-layout{display:grid;grid-template-columns:1.15fr 1fr;gap:1rem;flex:1;min-height:0}
+.ks-hero{
+  background:linear-gradient(145deg,#fff 0%,#f9e6d1 60%,#f3d7b8 100%);
+  border:1px solid #e3b183;border-radius:1rem;padding:1.15rem 1.35rem;
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;box-shadow:var(--shadow);
+  animation:riseIn .7s cubic-bezier(.22,1,.36,1) both;
+}
+.ks-hero::after{
+  content:"NEGERI JALUR";position:absolute;right:-1.2rem;bottom:-.6rem;
+  font-size:3.2rem;font-weight:900;letter-spacing:.08em;color:rgba(196,86,14,.09);pointer-events:none;
+}
+.ks-tag{
+  display:inline-flex;align-items:center;gap:.45rem;background:#f8dcc0;border:1px solid #e79a58;
+  color:#c2410c;padding:.25rem .72rem;border-radius:2rem;font-size:.75rem;font-weight:700;letter-spacing:.06em;width:fit-content;
+}
+.ks-hero h2{font-size:1.58rem;line-height:1.22;margin-top:.55rem;color:var(--tx)}
+.ks-hero h2 span{color:#ad4709}
+.ks-desc{color:#7c4a2d;font-size:.9rem;line-height:1.5;margin-top:.55rem}
+.ks-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-top:.85rem}
+.ks-m{
+  background:#fff;border:1px solid #efc197;border-radius:.75rem;padding:.6rem .75rem;
+  box-shadow:0 3px 8px rgba(173,71,9,.08);transition:transform .3s ease;
+}
+.ks-m:hover{transform:translateY(-3px)}
+.ks-m b{display:block;font-size:1.35rem;color:#c4560e;line-height:1.15}
+.ks-m span{font-size:.74rem;color:var(--mut)}
+.ks-kec{margin-top:.85rem;padding-top:.7rem;border-top:1px dashed #e79a58}
+.ks-kec-title{font-size:.74rem;font-weight:700;letter-spacing:.08em;color:#c2410c;margin-bottom:.42rem;text-transform:uppercase}
+.kec-chips{display:flex;flex-wrap:wrap;gap:.34rem}
+.kec-chips i{
+  font-style:normal;font-size:.71rem;background:#fff;border:1px solid #e79a58;
+  color:#9a3412;padding:.18rem .52rem;border-radius:.45rem;
+  animation:chipPop .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+.kec-chips i:nth-child(odd){background:#f9e6d1}
+.kec-chips i:nth-child(1){animation-delay:.05s}.kec-chips i:nth-child(2){animation-delay:.1s}
+.kec-chips i:nth-child(3){animation-delay:.15s}.kec-chips i:nth-child(4){animation-delay:.2s}
+.kec-chips i:nth-child(5){animation-delay:.25s}.kec-chips i:nth-child(6){animation-delay:.3s}
+.kec-chips i:nth-child(7){animation-delay:.35s}.kec-chips i:nth-child(8){animation-delay:.4s}
+.kec-chips i:nth-child(9){animation-delay:.45s}.kec-chips i:nth-child(10){animation-delay:.5s}
+.kec-chips i:nth-child(11){animation-delay:.55s}.kec-chips i:nth-child(12){animation-delay:.6s}
+.kec-chips i:nth-child(13){animation-delay:.65s}.kec-chips i:nth-child(14){animation-delay:.7s}
+.kec-chips i:nth-child(15){animation-delay:.75s}
+@keyframes chipPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+.ks-right{display:flex;flex-direction:column;gap:.85rem;min-height:0}
+.ks-box{
+  background:#fff;border:1px solid var(--line);border-radius:.95rem;padding:.9rem 1.15rem;flex:1;
+  display:flex;flex-direction:column;justify-content:center;box-shadow:var(--shadow);
+  animation:riseIn .7s cubic-bezier(.22,1,.36,1) .15s both;
+}
+.ks-box h3{font-size:1.05rem;color:#ad4709;margin-bottom:.45rem;display:flex;align-items:center;gap:.45rem}
+.ks-list{display:flex;flex-direction:column;gap:.42rem}
+.ks-li{display:flex;align-items:flex-start;gap:.55rem;font-size:.86rem;color:#5b3520;line-height:1.35}
+.ks-li b{color:#c4560e;flex:none}
+.pst-banner{
+  background:linear-gradient(90deg,#dd6b1d,#e5842f);border-radius:.9rem;padding:.75rem 1.05rem;
+  display:flex;align-items:center;justify-content:space-between;gap:.8rem;
+  box-shadow:0 6px 16px rgba(173,71,9,.3);animation:riseIn .7s cubic-bezier(.22,1,.36,1) .3s both;
+}
+.pst-banner strong{display:block;font-size:.92rem;color:#fff}
+.pst-banner span{font-size:.78rem;color:#fff4e6}
+.pst-url{
+  background:#fff;color:#ad4709;font-weight:800;font-size:.76rem;padding:.35rem .72rem;border-radius:.55rem;
+  white-space:nowrap;animation:urlPulse 2.4s ease-in-out infinite;
+}
+@keyframes urlPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+/* VIEW 3 & HEAD UMUM */
+.info-gallery-wrap{display:flex;flex-direction:column;height:100%;gap:.55rem;min-height:0}
+.info-gallery-head{
+  display:flex;align-items:center;justify-content:space-between;padding:.38rem .95rem;
+  background:linear-gradient(90deg,#fff,#f7e2cb);border:1px solid #e3b183;border-radius:.75rem;flex:none;
+  box-shadow:0 3px 8px rgba(173,71,9,.1);
+}
+.info-gallery-head h2{font-size:1.05rem;color:var(--tx);display:flex;align-items:center;gap:.5rem}
+.info-gallery-head h2 span{color:#ad4709}
+.info-gallery-head small{color:var(--mut);font-size:.78rem;font-weight:600}
+.info-trio{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:1.05rem;min-height:0}
+.info-card{
+  position:relative;background:linear-gradient(160deg,#fff 0%,#f8e4cf 100%);
+  border:1.5px solid #e3b183;border-radius:1rem;padding:.55rem;
+  display:flex;flex-direction:column;min-height:0;overflow:hidden;
+  box-shadow:0 6px 16px rgba(173,71,9,.16);
+  opacity:0;transform:translateY(34px) scale(.94);
+}
+@keyframes cardPopIn{
+  0%{opacity:0;transform:translateY(38px) scale(.92)}
+  65%{opacity:1;transform:translateY(-5px) scale(1.01)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+#v3.on .info-card:nth-child(1){animation:cardPopIn .8s cubic-bezier(.22,1,.36,1) .08s forwards}
+#v3.on .info-card:nth-child(2){animation:cardPopIn .8s cubic-bezier(.22,1,.36,1) .28s forwards}
+#v3.on .info-card:nth-child(3){animation:cardPopIn .8s cubic-bezier(.22,1,.36,1) .48s forwards}
+.info-img-box{flex:1;min-height:0;background:#fff;border-radius:.7rem;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:.2rem}
+.info-img-box img{width:100%;height:100%;object-fit:contain;display:block}
+.info-cap{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.42rem .35rem .1rem;flex:none}
+.info-cap b{font-size:.84rem;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.info-pill{font-size:.68rem;font-weight:800;padding:.16rem .52rem;border-radius:1rem;white-space:nowrap;flex:none}
+.ip-sky{background:#f8dcc0;color:#c2410c;border:1px solid #e79a58}
+.ip-gold{background:#fff3c4;color:#92400e;border:1px solid #fcd34d}
+.ip-emerald{background:#f6d6c0;color:#b4440f;border:1px solid #e69a78}
+
+/* VIEW 4: POSTER PENGHARGAAN */
+.photo-stage{
+  position:relative;flex:1;min-height:0;border-radius:1rem;overflow:hidden;
+  border:1.5px solid #e79a58;background:#f9e6d1;box-shadow:0 8px 20px rgba(173,71,9,.25);
+}
+.p-bars{position:absolute;top:.75rem;left:.9rem;right:.9rem;z-index:6;display:grid;grid-template-columns:repeat(5,1fr);gap:.45rem}
+.p-seg{height:.28rem;background:rgba(255,255,255,.65);border-radius:1rem;overflow:hidden}
+.p-seg i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#dd6b1d,#c4560e);border-radius:1rem}
+.p-seg.done i{width:100%;transition:none}
+.p-seg.run i{width:100%;transition:width 5s linear}
+.p-slide{
+  position:absolute;inset:0;opacity:0;transform:scale(1.04) translateX(18px);visibility:hidden;
+  transition:opacity .9s cubic-bezier(.22,1,.36,1), transform 5s ease-out;pointer-events:none;
+  background:linear-gradient(145deg,#fff 0%,#f9e6d1 100%);
+}
+.p-slide.active{opacity:1;transform:scale(1) translateX(0);z-index:2;visibility:visible}
+.p-slide.leave{opacity:0;transform:scale(.97) translateX(-24px);z-index:1;visibility:visible}
+.p-slide .p-main-img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;display:block}
+.p-caption{
+  position:absolute;left:0;right:0;bottom:0;z-index:4;padding:2.2rem 1.35rem .95rem;
+  background:linear-gradient(to top, rgba(124,45,18,.88) 12%, rgba(194,65,12,.45) 62%, transparent 100%);
+  display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;
+}
+.p-caption h3{font-size:1.18rem;color:#fff;margin-bottom:.16rem;transform:translateY(12px);opacity:0;transition:all .6s cubic-bezier(.22,1,.36,1) .2s}
+.p-caption p{font-size:.84rem;color:#f8dcc0;transform:translateY(12px);opacity:0;transition:all .6s cubic-bezier(.22,1,.36,1) .32s}
+.p-slide.active .p-caption h3,.p-slide.active .p-caption p{transform:translateY(0);opacity:1}
+.p-counter{background:rgba(255,255,255,.92);border:1px solid #e79a58;color:#ad4709;font-weight:800;font-size:.82rem;padding:.3rem .8rem;border-radius:2rem;white-space:nowrap}
+.p-thumbs{position:absolute;top:1.55rem;right:.9rem;z-index:6;display:flex;gap:.38rem}
+.p-thumb{
+  width:2.5rem;height:3rem;border-radius:.45rem;overflow:hidden;border:2px solid rgba(255,255,255,.8);
+  opacity:.65;transition:opacity .3s ease,transform .3s ease;cursor:pointer;background:#fff;
+}
+.p-thumb.active{opacity:1;border-color:#c4560e;transform:scale(1.1)}
+.p-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* VIEW 5: VIDEO */
+.video-stage{
+  position:relative;flex:1;min-height:0;border-radius:1rem;overflow:hidden;
+  border:2px solid #e79a58;background:#2b1405;
+  box-shadow:0 8px 22px rgba(124,45,18,.35);
+  display:flex;align-items:center;justify-content:center;
+}
+#v5.on .video-stage{animation:videoZoomReveal .8s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes videoZoomReveal{from{opacity:0;transform:scale(.95) translateY(18px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.video-stage video{width:100%;height:100%;object-fit:contain;display:block;background:#000}
+.video-stage .vid-photo{width:100%;height:100%;object-fit:contain;display:none;background:radial-gradient(circle at center,#fff 0%,#f3d7b8 100%)}
+.vid-badge{
+  position:absolute;top:.85rem;left:.95rem;z-index:5;display:inline-flex;align-items:center;gap:.45rem;
+  background:rgba(255,255,255,.94);border:1px solid #e79a58;color:#c2410c;
+  padding:.3rem .8rem;border-radius:2rem;font-size:.76rem;font-weight:800;letter-spacing:.05em;
+}
+.vid-rec{width:.5rem;height:.5rem;border-radius:50%;background:#c4560e;animation:pulse 1.4s infinite}
+.vid-fallback{
+  position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:2rem;color:#7c4a2d;background:radial-gradient(circle at center,#fff 0%,#f3d7b8 100%);z-index:3;
+}
+.vid-fallback b{font-size:1.15rem;color:#ad4709;margin-bottom:.35rem}
+.vid-fallback code{background:#f8dcc0;border:1px solid #e79a58;color:#c2410c;padding:.15rem .45rem;border-radius:.35rem}
+
+/* =====================================================================
+   VIEW 6: PETUGAS AZAN ZUHUR & ASHAR + JADWAL SHOLAT KUANSING
+   ===================================================================== */
+.az-banner{
+  position:relative;flex:none;overflow:hidden;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.5rem 1.3rem;border-radius:1rem;color:#fff;
+  background:linear-gradient(100deg,#dd6b1d,#e5842f,#dd6b1d);
+  box-shadow:0 6px 16px rgba(173,71,9,.28);
+}
+.az-banner small{display:block;font-size:.72rem;letter-spacing:.16em;font-weight:800;opacity:.92}
+.az-bn-title{font-size:1.3rem;font-weight:800;line-height:1.15;text-shadow:0 2px 6px rgba(124,45,18,.22)}
+.az-bn-cd{font-size:2.3rem;font-weight:800;font-variant-numeric:tabular-nums;text-shadow:0 2px 6px rgba(124,45,18,.25);white-space:nowrap}
+.az-banner.live{
+  background:linear-gradient(100deg,#b5470a,#c4560e,#dd6b1d,#b5470a);
+  box-shadow:0 0 0 5px rgba(221,107,29,.25),0 8px 20px rgba(173,71,9,.5);
+}
+
+.az-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;min-height:0}
+.az-card{
+  position:relative;display:flex;flex-direction:column;min-height:0;overflow:hidden;
+  background:linear-gradient(160deg,#ffffff 0%,#f8e4cf 100%);
+  border:1.5px solid #e3b183;border-radius:1.2rem;padding:.95rem 1.3rem;
+  box-shadow:0 6px 16px rgba(173,71,9,.16);
+  opacity:0;transform:translateY(34px) scale(.94);
+}
+#v6.on .az-card:nth-child(1){animation:cardPopIn .8s cubic-bezier(.22,1,.36,1) .1s forwards}
+#v6.on .az-card:nth-child(2){animation:cardPopIn .8s cubic-bezier(.22,1,.36,1) .3s forwards}
+.az-card.st-live{
+  border-color:#c4560e;background:linear-gradient(160deg,#fdf7ee 0%,#f3d7b8 100%);
+  box-shadow:0 0 0 3px rgba(221,107,29,.28),0 8px 20px rgba(196,86,14,.4);
+}
+.az-top{position:relative;z-index:2;display:flex;align-items:center;gap:.85rem;flex:none}
+.az-ico{
+  width:3.6rem;height:3.6rem;font-size:2rem;border-radius:1.05rem;background:#f8dcc0;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 0 0 1px #e79a58;
+}
+.az-pn{font-size:.8rem;letter-spacing:.16em;font-weight:800;color:#a47355}
+.az-pt{font-size:2.5rem;font-weight:800;color:#ad4709;line-height:1.05;font-variant-numeric:tabular-nums}
+.az-pt small{font-size:.9rem;font-weight:700;color:#a47355;margin-left:.3rem}
+.az-chip{
+  margin-left:auto;font-size:.78rem;font-weight:800;letter-spacing:.04em;
+  padding:.3rem .8rem;border-radius:2rem;background:#fff;border:1px solid #e79a58;color:#c2410c;white-space:nowrap;
+}
+.az-card.st-live .az-chip{background:#c4560e;border-color:#c4560e;color:#fff;animation:chipBlink 1.1s ease-in-out infinite}
+.az-card.st-after .az-chip{background:#f9e6d1;color:#a47355}
+@keyframes chipBlink{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+
+.az-body{position:relative;z-index:2;flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+.az-rip{position:absolute;inset:0;pointer-events:none;z-index:0}
+.az-rip i{
+  position:absolute;left:50%;top:50%;width:7rem;height:7rem;margin:-3.5rem 0 0 -3.5rem;
+  border-radius:50%;border:2px solid rgba(196,86,14,.55);opacity:0;
+}
+.az-card.st-live .az-rip i{animation:ripple 3.6s ease-out infinite}
+.az-rip i:nth-child(2){animation-delay:1.2s!important}
+.az-rip i:nth-child(3){animation-delay:2.4s!important}
+@keyframes ripple{0%{transform:scale(.4);opacity:.75}100%{transform:scale(4.4);opacity:0}}
+
+/* (Kunci dihapus: nama petugas selalu tampil) */
+.az-lock{display:none!important}
+.az-reveal{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center}
+.az-reveal small{letter-spacing:.24em;font-weight:800;color:#c2410c;font-size:.8rem;animation:riseIn .6s ease both}
+.az-name{
+  font-size:3.5rem;font-weight:900;line-height:1.1;color:#c2410c;margin-top:.25rem;
+  text-shadow:0 3px 10px rgba(196,86,14,.28);
+}
+.az-name.nodata{font-size:1.5rem;color:#a47355;text-shadow:none;font-weight:700}
+.az-name span{
+  display:inline-block;opacity:0;transform:translateY(1.4rem) scale(.5) rotate(-8deg);
+  animation:letterIn .7s cubic-bezier(.34,1.56,.64,1) forwards;animation-delay:calc(var(--i) * .07s + .15s);
+}
+@keyframes letterIn{to{opacity:1;transform:translateY(0) scale(1) rotate(0)}}
+.az-role{font-size:.85rem;color:#a47355;margin-top:.15rem;animation:riseIn .7s ease .5s both}
+.az-wave{display:none;gap:4px;align-items:flex-end;height:2.2rem;margin-top:.6rem}
+.az-card.st-live .az-wave{display:flex}
+.az-wave i{
+  width:5px;height:2.1rem;border-radius:3px;background:linear-gradient(#e79a58,#c4560e);
+  transform-origin:bottom center;transform:scaleY(.17);
+  animation:wave .9s ease-in-out infinite alternate;animation-delay:calc(var(--d) * .07s);
+}
+@keyframes wave{from{transform:scaleY(.17)}to{transform:scaleY(1)}}
+
+.az-times{flex:none;display:grid;grid-template-columns:repeat(5,1fr);gap:.7rem}
+.az-t{
+  background:#fff;border:1px solid var(--line);border-radius:.85rem;padding:.4rem .85rem;
+  display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+  transition:opacity .4s ease;box-shadow:0 3px 8px rgba(173,71,9,.07);
+}
+.az-t-n{font-size:.78rem;font-weight:800;letter-spacing:.08em;color:#a47355;text-transform:uppercase}
+.az-t b{font-size:1.25rem;color:#ad4709;font-variant-numeric:tabular-nums}
+.az-t.past{opacity:.5}
+.az-t.next{border-color:#dd6b1d;background:#f9e6d1;box-shadow:0 0 0 3px rgba(221,107,29,.15);animation:urlPulse 2.4s ease-in-out infinite}
+.az-t.live{background:linear-gradient(100deg,#c4560e,#dd6b1d);border-color:#c4560e;opacity:1}
+.az-t.live .az-t-n,.az-t.live b{color:#fff}
+.az-foot{flex:none;text-align:center;font-size:.74rem;color:var(--mut);font-weight:600}
+
+/* FOOTER */
+footer{
+  position:relative;background:#fff;border-top:2px solid #e79a58;
+  display:flex;align-items:center;height:2.2rem;padding-left:.75rem;gap:.65rem;
+  font-size:.95rem;color:#7c4a2d;z-index:6;font-weight:500;
+}
+.bgm-btn{
+  flex:none;display:inline-flex;align-items:center;gap:.32rem;
+  background:#f9e6d1;border:1px solid #e79a58;color:#c2410c;
+  padding:.2rem .58rem;border-radius:1rem;font-size:.68rem;font-weight:700;letter-spacing:.02em;
+  cursor:pointer;transition:all .2s ease;user-select:none;white-space:nowrap;
+}
+.bgm-btn:hover{background:#f0d3b3;color:#9a3412;border-color:#dd6b1d}
+.bgm-btn.playing{background:#dd6b1d;border-color:#c4560e;color:#fff}
+.bgm-btn.err{background:#fee2e2;border-color:#fca5a5;color:#b91c1c}
+.eq-bars{display:inline-flex;align-items:flex-end;gap:1.5px;height:9px}
+.eq-bars i{display:block;width:2px;height:9px;background:currentColor;border-radius:1px;transform-origin:bottom center;transform:scaleY(.33)}
+.bgm-btn.playing .eq-bars i:nth-child(1){animation:eq .7s ease-in-out infinite alternate}
+.bgm-btn.playing .eq-bars i:nth-child(2){animation:eq .5s ease-in-out .15s infinite alternate}
+.bgm-btn.playing .eq-bars i:nth-child(3){animation:eq .65s ease-in-out .3s infinite alternate}
+@keyframes eq{from{transform:scaleY(.22)}to{transform:scaleY(1)}}
+/* VOLUME */
+.vol-grp{flex:none;display:inline-flex;align-items:center;gap:.3rem;background:#f9e6d1;border:1px solid #e79a58;color:#c2410c;padding:.14rem .45rem;border-radius:1rem;font-size:.68rem;font-weight:700;white-space:nowrap;user-select:none}
+.vol-grp b{min-width:2.3rem;text-align:center;color:#ad4709;font-variant-numeric:tabular-nums}
+.vol-b{width:1.2rem;height:1.2rem;padding:0;border-radius:50%;border:1px solid #e79a58;background:#fff;color:#c2410c;font-size:.85rem;font-weight:800;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .2s ease,transform .2s ease}
+.vol-b:hover{background:#dd6b1d;color:#fff;border-color:#c4560e}
+.vol-b:active{transform:scale(.88)}
+.tk-wrap{flex:1;overflow:hidden;white-space:nowrap;min-width:0}
+#tk{display:inline-block;padding-left:100%;animation:tk 150s linear infinite;will-change:transform}
+@keyframes tk{to{transform:translateX(-100%)}}
+@media(prefers-color-scheme:dark){:root{color-scheme:light}}
+</style>
+</head>
+<body>
+
+<div class="bg-blobs"><i></i><i></i><i></i></div>
+
+<audio id="bgmAudio" preload="auto" loop></audio>
+<audio id="azanAudio" preload="auto"></audio>
+<audio id="callAudio" preload="none"></audio>
+
+<header>
+  <div class="brand-wrap">
+    <div class="bps-badge" id="bpsLogoBox" title="Badan Pusat Statistik Kabupaten Kuantan Singingi">
+      <svg viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 74C22 38 48 16 86 14C62 24 44 43 38 74H16Z" fill="#0072BC"/>
+        <path d="M42 74C47 46 67 28 99 26C79 35 64 51 59 74H42Z" fill="#7AC143"/>
+        <path d="M64 74C68 54 83 41 108 40C93 47 82 59 78 74H64Z" fill="#F7941D"/>
+        <text x="60" y="93" text-anchor="middle" fill="#0F294A" font-family="Arial,sans-serif" font-weight="900" font-size="18" letter-spacing="2">BPS</text>
+      </svg>
+    </div>
+    <div class="brand">
+      <div class="agency">BADAN PUSAT STATISTIK KABUPATEN KUANTAN SINGINGI</div>
+      <h1>MATRIKS KEGIATAN PEGAWAI <span id="monthTitle" style="color:#fff7d6">NOVEMBER 2026</span></h1>
+      <small><span id="subInfo">Bulan Berjalan · Rabu, 18 Nov 2026</span></small>
+    </div>
+  </div>
+
+  <div class="months-bar" id="monthsBar" title="Klik bulan untuk melihat jadwal bulan tersebut"></div>
+
+  <div id="clock"></div>
+</header>
+<div class="prog-wrap"><div class="prog-bar" id="progBar"></div></div>
+
+<div class="kp" id="kp"></div>
+
+<main>
+  <!-- SLIDE 1: MATRIKS KEGIATAN PEGAWAI -->
+  <section class="view on" id="v0">
+    <div class="row hd" id="hd"></div>
+    <div id="sc"><div id="rows"></div></div>
+    <div class="bottom-meta">
+      <div id="legend"></div>
+      <div id="syncStatus"><span class="dot-sync" id="syncDot"></span><span id="syncText">Data Lokal · BPS Kab. Kuantan Singingi</span></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: RINGKASAN & AGENDA HARI INI -->
+  <section class="view" id="v1">
+    <div class="stat" id="stat"></div>
+    <div class="cols" id="cols"></div>
+  </section>
+
+  <!-- SLIDE 3: SEKILAS BPS KABUPATEN KUANTAN SINGINGI -->
+  <section class="view" id="v2">
+    <div class="kuansing-layout">
+      <div class="ks-hero">
+        <div>
+          <div class="ks-tag">📊 SEKILAS WILAYAH & LAYANAN · BPS KUANTAN SINGINGI</div>
+          <h2>Menyediakan Data Statistik Berkualitas untuk <span>Bumi Pacu Jalur</span></h2>
+          <p class="ks-desc">
+            BPS Kabupaten Kuantan Singingi berperan sebagai penyedia data statistik dasar dan pembina statistik sektoral di seluruh wilayah Kuantan Singingi guna mendukung perencanaan pembangunan daerah yang akurat dan berbasis bukti.
+          </p>
+          <div class="ks-metrics">
+            <div class="ks-m"><b>15</b><span>Kecamatan Cakupan Pendataan</span></div>
+            <div class="ks-m"><b>229</b><span>Desa / Kelurahan Wilayah Tugas</span></div>
+            <div class="ks-m"><b>BerAKHLAK</b><span>Nilai Dasar Pelayanan Publik</span></div>
+          </div>
+        </div>
+        <div class="ks-kec">
+          <div class="ks-kec-title">15 Kecamatan Wilayah Kerja BPS Kabupaten Kuantan Singingi</div>
+          <div class="kec-chips">
+            <i>Kuantan Mudik</i><i>Hulu Kuantan</i><i>Gunung Toar</i><i>Pucuk Rantau</i>
+            <i>Singingi</i><i>Singingi Hilir</i><i>Kuantan Tengah</i><i>Sentajo Raya</i>
+            <i>Benai</i><i>Pangean</i><i>Logas Tanah Darat</i><i>Kuantan Hilir</i>
+            <i>Kuantan Hilir Seberang</i><i>Cerenti</i><i>Inuman</i>
+          </div>
+        </div>
+      </div>
+
+      <div class="ks-right">
+        <div class="ks-box">
+          <h3>🏛️ Layanan Publik & Kegiatan Strategis</h3>
+          <div class="ks-list">
+            <div class="ks-li"><b>01</b><span><b>Pelayanan Statistik Terpadu (PST):</b> Konsultasi data, rekomendasi kegiatan statistik, dan akses publikasi gratis bagi masyarakat & instansi.</span></div>
+            <div class="ks-li"><b>02</b><span><b>Survei Sosial & Ekonomi Rutin:</b> Sakernas, Susenas, Seruti, Survei Harga/NTP, Industri (IMK), serta penyusunan PDRB Kabupaten Kuantan Singingi.</span></div>
+            <div class="ks-li"><b>03</b><span><b>Pembinaan Desa Cantik & Statistik Sektoral:</b> Pendampingan tata kelola data desa dan evaluasi penyelenggaraan statistik sektoral daerah (EPSS).</span></div>
+          </div>
+        </div>
+        <div class="pst-banner">
+          <div>
+            <strong>Butuh Data Resmi Kabupaten Kuantan Singingi?</strong>
+            <span>Kunjungi Pelayanan Statistik Terpadu (PST) BPS Kab. Kuantan Singingi di Teluk Kuantan atau akses daring 24 jam.</span>
+          </div>
+          <div class="pst-url">kuansingkab.bps.go.id</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: GALERI INFOGRAFIS MAKRO KUANSING -->
+  <section class="view" id="v3">
+    <div class="info-gallery-wrap">
+      <div class="info-gallery-head">
+        <h2>📈 INFOGRAFIS INDIKATOR MAKRO <span>KABUPATEN KUANTAN SINGINGI</span></h2>
+        <small>Sumber: BPS Kabupaten Kuantan Singingi · kuansingkab.bps.go.id</small>
+      </div>
+      <div class="info-trio">
+        <div class="info-card">
+          <div class="info-img-box"><img decoding="async" src="infografis1.png" alt="Pertumbuhan Ekonomi Kabupaten Kuantan Singingi 2025"></div>
+          <div class="info-cap"><b>Pertumbuhan Ekonomi 2025</b><span class="info-pill ip-sky">5,31% · PDRB 28.958,89 M</span></div>
+        </div>
+        <div class="info-card">
+          <div class="info-img-box"><img decoding="async" src="infografis2.png" alt="Indikator Kemiskinan Kabupaten Kuantan Singingi 2025" onerror="this.src='infografis2.jpg'"></div>
+          <div class="info-cap"><b>Indikator Kemiskinan 2025</b><span class="info-pill ip-gold">6,99% · Turun dari 7,89%</span></div>
+        </div>
+        <div class="info-card">
+          <div class="info-img-box"><img decoding="async" src="infografis3.png" alt="Indeks Pembangunan Gender Kabupaten Kuantan Singingi 2025" onerror="this.src='infografis3.jpg'"></div>
+          <div class="info-cap"><b>Indeks Pembangunan Gender 2025</b><span class="info-pill ip-emerald">91,08 · Peringkat 4 Riau</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: GALERI 5 POSTER PENGHARGAAN -->
+  <section class="view" id="v4">
+    <div class="info-gallery-wrap">
+      <div class="info-gallery-head">
+        <h2>🏆 CAPAIAN PRESTASI <span>BPS KABUPATEN KUANTAN SINGINGI · 16 PENGHARGAAN SE-PROVINSI RIAU</span></h2>
+        <small id="photoTimerLabel">Tayang Otomatis · 5 Detik Per Slide</small>
+      </div>
+      <div class="photo-stage" id="photoStage">
+        <div class="p-bars" id="pBars">
+          <div class="p-seg"><i></i></div><div class="p-seg"><i></i></div><div class="p-seg"><i></i></div><div class="p-seg"><i></i></div><div class="p-seg"><i></i></div>
+        </div>
+        <div class="p-thumbs" id="pThumbs"></div>
+        <div id="pSlidesWrap" style="position:relative;width:100%;height:100%"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: TAYANGAN VIDEO -->
+  <section class="view" id="v5">
+    <div class="info-gallery-wrap">
+      <div class="info-gallery-head">
+        <h2>🎬 TAYANGAN VIDEO <span>BPS KABUPATEN KUANTAN SINGINGI</span></h2>
+        <small>Profil & Publikasi Video · BPS Kab. Kuantan Singingi</small>
+      </div>
+      <div class="video-stage">
+        <div class="vid-badge"><span class="vid-rec"></span> <span id="vidBadgeText">VIDEO TAYANGAN UTAMA</span></div>
+        <video id="tvVideo" playsinline preload="auto"></video>
+        <img class="vid-photo" id="vidPhoto" alt="Pegawai Berprestasi" decoding="async">
+        <div class="vid-fallback" id="vidFallback">
+          <b id="vidFbTitle">File Video Belum Ditemukan</b>
+          <span>Simpan file video Anda dengan nama <code id="vidFbName">video.mp4</code> di folder yang sama dengan file HTML ini.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: PETUGAS AZAN ZUHUR & ASHAR -->
+  <section class="view" id="v6">
+    <div class="info-gallery-wrap">
+      <div class="info-gallery-head">
+        <h2>🕌 PETUGAS AZAN <span>ZUHUR & ASHAR</span></h2>
+        <small id="azLoc">Teluk Kuantan, Kab. Kuantan Singingi · Jadwal Sholat Otomatis</small>
+      </div>
+      <div class="az-banner" id="azBanner">
+        <div>
+          <small id="azBnLabel">MENUJU WAKTU SHOLAT</small>
+          <div class="az-bn-title" id="azBnTitle">Memuat jadwal…</div>
+        </div>
+        <div class="az-bn-cd" id="azBnCd">--:--:--</div>
+      </div>
+      <div class="az-grid" id="azGrid"></div>
+      <div class="az-times" id="azTimes"></div>
+      <div class="az-foot" id="azStatus"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <button class="bgm-btn" id="bgmBtn" onclick="toggleAudio()" title="Klik atau tekan A untuk Play/Pause musik">
+    <span class="eq-bars"><i></i><i></i><i></i></span>
+    <span id="bgmLabel">Musik Off</span>
+  </button>
+  <div class="vol-grp" title="Volume musik latar (tombol ↑ / ↓)">
+  <span>🎵 Musik</span>
+  <button class="vol-b" onclick="changeVol('music',-1)" aria-label="Kurangi volume musik">−</button>
+  <b id="volMusicVal">50%</b>
+  <button class="vol-b" onclick="changeVol('music',1)" aria-label="Naikkan volume musik">+</button>
+</div>
+<div class="vol-grp" title="Volume azan + semua panggilan (tombol + / -)">
+  <span>🕌 Azan &amp; Panggilan</span>
+  <button class="vol-b" onclick="changeVol('azan',-1)" aria-label="Kurangi volume azan dan panggilan">−</button>
+  <b id="volAzanVal">100%</b>
+  <button class="vol-b" onclick="changeVol('azan',1)" aria-label="Naikkan volume azan dan panggilan">+</button>
+</div>
+  <div class="tk-wrap"><div id="tk"></div></div>
+</footer>
+
+<script>
+/* =====================================================================
+   PENGATURAN UTAMA
+   ===================================================================== */
+const CONFIG = {
+  /* --- Spreadsheet MATRIKS KEGIATAN (tetap seperti sebelumnya) --- */
+  API_URL: 'https://script.google.com/macros/s/AKfycbxf1XsVjOxuTphbmTSPYBn58FWnAWVsD7_7_9HkD41pufIxjYR4W0dy9KhL9IOFbj-5/exec',
+  SYNC_INTERVAL_SEC: 60,
+
+  /* --- Spreadsheet PETUGAS AZAN (isi dengan URL Web App Apps Script azan) --- */
+  AZAN_API_URL: 'https://script.google.com/macros/s/AKfycbyf18hpSQMOhskMPAESDrLYU69j0CdQM4tySGu5UMBd8nJP2wPh3xH-fhusuTLUcQJR/exec',              // <-- TEMPEL URL WEB APP AZAN DI SINI (lihat panduan)
+  AZAN_SYNC_INTERVAL_SEC: 60,
+
+  /* --- Jadwal sholat otomatis Teluk Kuantan (Kab. Kuantan Singingi) --- */
+  LAT: -0.5333,
+  LON: 101.55,
+  PRAYER_METHOD: 20,             // 20 = Kemenag RI (Aladhan API). Bisa diganti bila perlu.
+  KOTA_LABEL: 'Teluk Kuantan, Kab. Kuantan Singingi',
+
+  /* --- Perilaku slide azan --- */
+  AZAN_VIEW_SEC: 14,             // Lama tampil slide azan pada putaran normal
+  AZAN_ALERT_ENABLED: true,      // true = saat waktu azan Zuhur/Ashar tiba, TV otomatis pindah ke slide azan
+  AZAN_ALERT_MIN: 5,             // Lama (menit) status "SEDANG AZAN" ditampilkan setelah waktu azan
+
+  /* --- Suara azan (otomatis diputar saat waktu Zuhur & Ashar) --- */
+  AZAN_SOUND_ENABLED: true,
+  AZAN_SOUND_ZUHUR: ['AZAN_SOUND_ZUHUR.mp3', 'azan_sound_zuhur.mp3', 'azan.mp3'],  // nama file azan Zuhur (dicoba berurutan)
+  AZAN_SOUND_ASHAR: ['AZAN_SOUND_ASHAR.mp3', 'azan_sound_ashar.mp3', 'azan.mp3'],  // nama file azan Ashar (dicoba berurutan)
+  AZAN_TEST_KEYS: true,          // T = tes azan Zuhur, Y = tes azan Ashar, U = tes panggil petugas Zuhur, I = tes panggil petugas Ashar, O = tes panggilan pegawai, Esc = berhenti
+  AZAN_VOLUME: 1.0,              // 0.0 - 1.0
+  AZAN_MAX_MIN: 10,              // Batas aman (menit) slide azan terkunci jika suara azan tidak selesai
+  AZAN_NO_AUDIO_MIN: 4,          // Jika file azan tidak ada / diblokir browser: lama musik diam & slide azan tampil
+  AZAN_LATE_TOL_SEC: 90,         // Jika halaman baru dibuka lewat dari ini setelah waktu azan, azan tidak diputar
+
+  /* --- PANGGILAN PETUGAS AZAN (audio nama: arif, ikhlas, aldo, zikri, dimas, wahyu) --- */
+  PANGGIL_ENABLED: true,                 // true = panggil petugas azan & panggil pegawai setelah azan
+  PANGGIL_MENIT: [5, 1],                 // dipanggil 5 menit & 1 menit sebelum azan
+  PANGGIL_FOLDER: '',                    // folder audio (kosong = folder yang sama dengan file HTML)
+  PANGGIL_EXT: ['mp3', 'm4a', 'wav', 'ogg', 'aac', 'mp4'],  // ekstensi yang dicoba berurutan (otomatis mengingat yang berhasil)
+  PANGGIL_PEGAWAI_FILE: ['panggilan pegawai', 'panggilan_pegawai'],  // audio panggilan pegawai (tanpa ekstensi)
+  PANGGIL_PEGAWAI_DELAY_SEC: 3,          // jeda (detik) setelah azan selesai sebelum panggilan pegawai diputar
+  PANGGIL_VOLUME: 1.0,                   // 0.0 - 1.0
+  PANGGIL_LATE_TOL_SEC: 60,              // lewat dari ini dari jadwal panggilan -> panggilan dilewati
+  PANGGIL_MAX_SEC: 90,                   // batas aman (detik) satu audio panggilan
+
+  /* --- Performa Smart TV --- */
+  FRAME_MS: 33,                  // 33 = ±30 fps (lebih ringan). Ubah ke 16 untuk 60 fps jika TV kuat.
+
+  /* --- Musik latar (SELALU DIULANG / REPEAT, tidak berhenti saat lagu habis) --- */
+  MUSIC_BIASA: ['musik.mp3'],        // Senin-Kamis, Sabtu, Minggu (boleh >1 file, diputar bergantian lalu mengulang dari awal)
+  MUSIC_JUMAT: ['musik-jumat.mp3'],  // KHUSUS hari Jumat saja (lagu Arab), diulang terus
+  MUSIC_JUMAT_FALLBACK: true,        // true = bila file musik-jumat.mp3 tidak ada, hari Jumat memakai musik.mp3 agar tidak sunyi. false = sunyi.
+  MUSIC_WATCHDOG_SEC: 5,             // Cek tiap X detik: bila musik berhenti sendiri (bukan dihentikan pengguna/azan/panggilan/video), nyalakan lagi
+
+  /* --- Teks berjalan di bawah: makin kecil makin lambat --- */
+  TICKER_REM_PER_SEC: 5,
+
+  YEAR: 2026,
+  FOCUS_CURRENT_MONTH: true,
+  AGENDA_VIEW_SEC: 12,
+  INFO_VIEW_SEC: 11,
+  GALLERY_VIEW_SEC: 15,
+  PHOTO_EACH_SEC: 5,
+  /* --- Daftar video di slide Tayangan Video (diputar berurutan, masing-masing sampai selesai) --- */
+  VIDEO_LIST: [
+    { label: 'VIDEO TAYANGAN UTAMA', files: ['video.mp4'] },
+    { label: '5 BUDAYA ORGANISASI',          files: ['video salam.mp4', 'video-salam.mp4', 'video_salam.mp4', 'videosalam.mp4', 'video salam.webm'] },  // ±18 detik; nama file dicoba berurutan
+    { label: 'PEGAWAI BERPRESTASI', type: 'image', seconds: 10,   // FOTO: tampil 10 detik (ubah angka 'seconds' bila perlu)
+      files: ['pegawai-berprestasi.png', 'pegawai berprestasi.png', 'pegawai_berprestasi.png', 'pegawai-berprestasi.jpg', 'pegawai berprestasi.jpg', 'pegawai_berprestasi.jpg', 'pegawai-berprestasi.jpeg', 'pegawai berprestasi.jpeg', 'pegawai-berprestasi.webp'] }
+  ],
+  VIDEO_SAFETY_SEC: 300,         // Batas aman (detik) total slide video bila video macet / tidak selesai
+  VIDEO_MISSING_SEC: 6,          // Bila file video tidak ditemukan: lama pesan ditampilkan sebelum lanjut
+  VIDEO_WITH_SOUND: true,
+  VIDEO_PAUSE_MUSIC: false,      // false = musik TETAP MAIN saat video tayang
+  VOLUME_STEP: 0.1,              // langkah tombol volume (0.1 = 10%)
+  SCROLL_SPEED: 0.048,
+  MUSIC_VOLUME: 0.50,
+  KEPALA_PHOTO: 'kepala.png',
+  BPS_LOGO_FILE: 'logo-bps.png'
+};
+
+const PHOTO_SLIDES = [
+  { src: 'foto1.png', title: 'BPS Kuansing Berprestasi — Raih 16 Penghargaan dari BPS Provinsi Riau', desc: 'Pencapaian terbaik se-Provinsi Riau sebagai wujud komitmen kualitas statistik dan kinerja organisasi.' },
+  { src: 'foto2.png', title: '7 Penghargaan Kategori Terbaik I Tingkat Provinsi Riau', desc: 'Pengelolaan Laporan BMN • SDM & Hukum • Stat. Kesra • Tanaman Pangan & Hortikultura • Neraca Pengeluaran • Manajemen Risiko • Quality Gate' },
+  { src: 'foto3.png', title: '6 Penghargaan Kategori Terbaik II Tingkat Provinsi Riau', desc: 'Penggunaan Aplikasi BOS • Kependudukan & Ketenagakerjaan • Perkebunan, Peternakan, Perikanan & Kehutanan • Industri & ESDM • Distribusi • Neraca Produksi' },
+  { src: 'foto4.png', title: '3 Penghargaan Kategori Terbaik III Tingkat Provinsi Riau', desc: 'Satuan Kerja dengan Capaian IKPA Berpredikat Sangat Baik • Statistik Ketahanan Sosial • Statistik Jasa' },
+  { src: 'foto5.png', title: 'Apresiasi Sinergi & Kolaborasi Untuk Bumi Pacu Jalur', desc: 'Terima kasih kepada seluruh pegawai organik, Mitra BPS, Pemkab Kuantan Singingi, dan masyarakat atas dukungan pelaksanaan tugas BPS.' }
+];
+
+(function loadCustomBpsLogo() {
+  if (!CONFIG.BPS_LOGO_FILE) return;
+  const img = new Image();
+  img.onload = () => {
+    const box = document.getElementById('bpsLogoBox');
+    if (box) { box.innerHTML = ''; box.appendChild(img); }
+  };
+  img.src = CONFIG.BPS_LOGO_FILE;
+})();
+
+const BULAN_NAMA = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const BULAN_SINGKAT = ['JAN','FEB','MAR','APR','MEI','JUN','JUL','AGU','SEP','OKT','NOV','DES'];
+const HARI = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+/* Warna seksi matriks: WARNA ASLI */
+const SEK = {
+  y:['Tata Usaha','#facc15'],
+  m:['Sosial','#d946ef'],
+  g:['Produksi','#16a34a'],
+  o:['Distribusi','#f97316'],
+  p:['Nerwilis','#fed7aa'],
+  b:['IPDS','#3b82f6']
+};
+
+const P = 'BPS Prov Riau',
+      SP = 'BPS Prov Riau (SPDT NTP)',
+      PL = t => 'Pelatihan Petugas SPKRT (' + t + ')',
+      PP = 'Panitia Pelatihan Pengolahan SPKRT',
+      IMK = 'IMK Tahunan';
+
+let DATA_BULAN = {
+  10: [
+    ['Hartono, S.Si',[[2,3,'CT','y'],[9,12,P,'o'],[13,13,'WFH','y'],[23,26,PL('PEMBUKA'),'o']]],
+    ['Fitri Mulyani, SST, M.E',[[10,13,P,'o'],[17,17,PP,'o'],[23,26,PL('PANITIA'),'o']]],
+    ['Mangatur Manurung, S.Si, M.Si',[[9,12,P,'o'],[13,13,'CT','y'],[23,26,PL('PANITIA'),'o']]],
+    ['Adhitya Nugraha, SST',[[10,13,P,'o'],[23,26,PL('INDA'),'o']]],
+    ['Maisyarah Noverina NM',[[10,12,P,'o']]],
+    ['Robby Junius, SE',[[4,6,P,'g'],[10,12,P,'o'],[23,26,PL('INDA'),'o']]],
+    ['Asmi Husin, SE',[[5,7,SP,'o'],[10,12,P,'o'],[23,26,PL('INDA'),'o']]],
+    ['Fajari Ramadhan, S.Tr.Stat.',[[4,6,P,'g'],[10,12,P,'o'],[23,26,PL('PANITIA'),'o']]],
+    ['Arni Juwita Novisda, SST',[[5,7,SP,'o'],[10,12,'Exit Meeting SE2026','o'],[16,16,PP,'o'],[23,26,PL('INDA'),'o']]],
+    ['Debi Tomika, S.SI',[[1,30,'Tugas Belajar','y']]],
+    ['Zulkendri Nopen, S.M',[[4,6,P,'o'],[11,11,IMK,'g'],[12,13,'Seruti','m']]],
+    ['Mujahidin, S.M',[[4,6,P,'o'],[10,10,'Pengawasan SPDT NTP','o'],[13,13,'Seruti','m']]],
+    ['Syamsi Hasan, SE',[[6,6,'Pengawasan SPDT','o'],[11,11,'Pengawasan SPDT','o'],[16,16,'Seruti','m']]],
+    ['Ova Irwanti, S.SI',[[4,6,P,'g'],[9,11,IMK,'g']]],
+    ['Irhasri, S.M',[[4,6,P,'g'],[10,12,IMK,'g'],[13,13,'Seruti','m']]],
+    ['Edismam, SE',[[4,6,P,'g'],[10,10,'Pengawasan Survei VHTS','o'],[11,12,'Seruti','m']]],
+    ['Dodi Firmansyah, S.Sos',[[2,2,'CT','y'],[5,7,SP,'o'],[10,11,IMK,'g'],[13,13,IMK,'g'],[16,16,'Seruti','m']]],
+    ['Eka Fitri Yanti',[[5,7,SP,'o'],[10,10,'Sakernas','m'],[12,13,'Seruti','m'],[17,17,'Sakernas','m']]],
+    ['Ahsin Istighfari, S.Si',[]],
+    ['Meidiana Pairuz, SST',[[1,30,'Tugas Belajar','y']]],
+    ['Nufaisa Munia, S.Tr.Stat.',[[8,11,'Pembinaan PDRB (BPS Provinsi Riau)','p'],[12,13,P,'o']]],
+    ['Aprilia Lutviana Dewi, S.Tr.Stat.',[[8,11,'Pembinaan PDRB (BPS Provinsi Riau)','p']]],
+    ['Deki Sukmaringga S.Si, M.E',[[9,12,P,'o'],[16,16,'Sakernas','m'],[23,26,PL('INDA'),'o']]],
+    ['Sabriella Hafifah, S.Tr.Stat.',[[9,12,'Rekonsiliasi Wilkerstat','o'],[17,17,'CT','y'],[18,30,'CT Alasan Penting','y']]],
+    ['Aprianto Manurung, A.Md.Stat',[[5,7,SP,'o'],[16,16,'Sakernas','m']]],
+    ['Guswana Adventus, S.Tr.Stat.',[[4,6,P,'g'],[8,11,'Rekonsiliasi Wilkerstat','o'],[16,16,'Pengajar Pelatihan','o'],[23,26,PL('PANITIA'),'o']]],
+    ['Novitri Kumala Sari, S.Si',[[10,12,P,'o'],[16,17,PP,'o'],[23,26,PL('PANITIA'),'o']]],
+    ['Alfiqri Dwiki Aufa, S.Stat',[[9,13,'CT','y'],[16,16,'Sakernas','m']]],
+    ['Khairul Rahman, A.Md',[]],
+    ['Badri Rori Ronaldi, SKM',[[10,12,P,'o']]],
+    ['Ispatoni',[]],['Heri Suprianto',[]],['Erlangga',[]]
+  ],
+  11: [
+    ['Hartono, S.Si',[]],
+    ['Fitri Mulyani, SST, M.E',[[28,31,'CUTI TAHUNAN','y']]],
+    ['Mangatur Manurung, S.Si, M.Si',[[21,23,'Cuti Tahunan','y'],[28,31,'CUTI TAHUNAN','y']]],
+    ['Adhitya Nugraha, SST',[[28,31,'CUTI TAHUNAN','y']]],
+    ['Maisyarah Noverina NM',[]],
+    ['Robby Junius, SE',[[21,23,'Cuti Tahunan','y']]],
+    ['Asmi Husin, SE',[[21,23,'Cuti Tahunan','y']]],
+    ['Fajari Ramadhan, S.Tr.Stat.',[]],
+    ['Arni Juwita Novisda, SST',[[28,31,'CUTI TAHUNAN','y']]],
+    ['Debi Tomika, SST',[[1,31,'Tugas Belajar','y']]],
+    ['Zulkendri Nopen, S.M',[[11,11,'CT','y'],[14,15,'CT','y']]],
+    ['Mujahidin, S.M',[]],
+    ['Syamsi Hasan, SE',[]],
+    ['Ova Irwanti, S.SI',[[28,31,'CUTI TAHUNAN','y']]],
+    ['Irhasri, S.M',[[28,31,'CUTI TAHUNAN','y']]],
+    ['Edismam, SE',[]],
+    ['Dodi Firmansyah, S.Sos',[]],
+    ['Eka Fitri Yanti',[[28,31,'CUTI TAHUNAN','y']]],
+    ['Ahsin Istighfari, S.Si',[[7,11,'Cuti Tahunan','y']]],
+    ['Meidiana Pairuz, SST',[[1,31,'Tugas Belajar','y']]],
+    ['Nufaisa Munia, S.Tr.Stat.',[[28,31,'CUTI TAHUNAN','y']]],
+    ['Aprilia Lutviana Dewi, S.Tr.Stat.',[[7,11,'Cuti Tahunan','y']]],
+    ['Deki Sukmaringga S.Si, M.E',[[28,31,'CUTI TAHUNAN','y']]],
+    ['Sabriella Hafifah, S.Tr.Stat.',[[1,5,'CT Alasan Penting','y'],[17,18,'CT','y'],[28,28,'CT','y']]],
+    ['Aprianto Manurung, A.Md.Stat',[]],
+    ['Guswana Adventus, S.Tr.Stat.',[]],
+    ['Novitri Kumala Sari, S.Si',[]],
+    ['Alfiqri Dwiki Aufa, S.Stat',[]],
+    ['Khairul Rahman, A.Md',[]],
+    ['Badri Rori Ronaldi, SKM',[]],
+    ['Ispatoni',[]],['Heri Suprianto',[]],['Erlangga',[]]
+  ]
+};
+
+let HOLIDAYS_BULAN = { 11: [24, 25] };
+
+/* Data petugas azan cadangan (dari Spreadsheet "Rekap Petugas Azan – November 2026").
+   Akan digantikan otomatis oleh data Spreadsheet bila AZAN_API_URL sudah diisi. */
+const AZAN_FALLBACK = {
+  '2026-11-02':{zuhur:'Dimas',ashar:'Aldo'},   '2026-11-03':{zuhur:'Aldo',ashar:'Arif'},
+  '2026-11-04':{zuhur:'Ikhlas',ashar:'Dimas'}, '2026-11-05':{zuhur:'Aldo',ashar:'Ikhlas'},
+  '2026-11-06':{zuhur:'Ikhlas',ashar:'Arif'},  '2026-11-09':{zuhur:'Arif',ashar:'Dimas'},
+  '2026-11-10':{zuhur:'Dimas',ashar:'Aldo'},   '2026-11-11':{zuhur:'Aldo',ashar:'Arif'},
+  '2026-11-12':{zuhur:'Ikhlas',ashar:'Dimas'}, '2026-11-13':{zuhur:'Aldo',ashar:'Ikhlas'},
+  '2026-11-16':{zuhur:'Ikhlas',ashar:'Arif'},  '2026-11-17':{zuhur:'Zikri',ashar:'Wahyu'},
+  '2026-11-18':{zuhur:'Dimas',ashar:'Aldo'},   '2026-11-19':{zuhur:'Wahyu',ashar:'Arif'},
+  '2026-11-20':{zuhur:'Ikhlas',ashar:'Dimas'}, '2026-11-23':{zuhur:'Aldo',ashar:'Wahyu'},
+  '2026-11-24':{zuhur:'Zikri',ashar:'Arif'},   '2026-11-25':{zuhur:'Wahyu',ashar:'Dimas'},
+  '2026-11-26':{zuhur:'Ikhlas',ashar:'Aldo'},  '2026-11-27':{zuhur:'Aldo',ashar:'Arif'},
+  '2026-11-30':{zuhur:'Zikri',ashar:'Dimas'}
+};
+
+const $ = id => document.getElementById(id);
+const pad2 = n => String(n).padStart(2, '0');
+function lsGet(k){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch(e){ return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+
+/* Progress bar ringan (transform, bukan width) */
+const progEl = $('progBar');
+let lastProg = -1;
+function setProg(p) {
+  p = Math.max(0, Math.min(100, p));
+  if (p !== 0 && p !== 100 && Math.abs(p - lastProg) < 0.15) return;
+  lastProg = p;
+  progEl.style.transform = 'scaleX(' + (p / 100) + ')';
+}
+
+/* =====================================================================
+   PEMUTAR MUSIK MP3 LOKAL (musik.mp3 / musik-jumat.mp3) — SELALU REPEAT
+   ===================================================================== */
+const bgm = $('bgmAudio');
+const azanAudio = $('azanAudio');
+const callAudio = $('callAudio');
+let wasMusicPlayingBeforeVideo = false;
+
+/* ---- VOLUME: 1) Musik latar  2) Azan + semua panggilan (disimpan di browser) ---- */
+const clamp01 = v => Math.max(0, Math.min(1, v));
+function loadVol(key, def) { const v = lsGet(key); return (typeof v === 'number' && isFinite(v)) ? clamp01(v) : clamp01(def); }
+let volMusic = loadVol('vol_musik', CONFIG.MUSIC_VOLUME);
+let volAzan  = loadVol('vol_azan',  CONFIG.AZAN_VOLUME);
+function pauseMusicForVideo() { return !!(CONFIG.VIDEO_WITH_SOUND && CONFIG.VIDEO_PAUSE_MUSIC); }
+function applyVolumes() {
+  bgm.volume = volMusic;
+  azanAudio.volume = volAzan;
+  callAudio.volume = volAzan;
+  const a = $('volMusicVal'), b = $('volAzanVal');
+  if (a) a.textContent = Math.round(volMusic * 100) + '%';
+  if (b) b.textContent = Math.round(volAzan * 100) + '%';
+}
+function changeVol(which, dir) {
+  const step = CONFIG.VOLUME_STEP || 0.1;
+  if (which === 'music') { volMusic = clamp01(Math.round((volMusic + dir * step) * 100) / 100); lsSet('vol_musik', volMusic); }
+  else { volAzan = clamp01(Math.round((volAzan + dir * step) * 100) / 100); lsSet('vol_azan', volAzan); }
+  applyVolumes();
+}
+applyVolumes();
+
+/* ---- Pilih lagu otomatis: Jumat = lagu Arab (khusus Jumat), hari lain = lagu biasa ---- */
+let musicDay = '', trackList = [], trackIdx = 0;
+let trackIsFriday = false, fridayFallback = false, musicIntent = false;
+let lastWatchdog = 0;
+const asList = l => (Array.isArray(l) ? l : [l]).filter(Boolean);
+function todayTracks(d) {
+  return asList((d || new Date()).getDay() === 5 ? CONFIG.MUSIC_JUMAT : CONFIG.MUSIC_BIASA);
+}
+function trackName() { return String(trackList[trackIdx] || 'musik').split('/').pop(); }
+function applyMusicForToday() {
+  const now = new Date();
+  const k = now.getFullYear() + '-' + pad2(now.getMonth() + 1) + '-' + pad2(now.getDate());
+  if (k === musicDay) return;
+  const wasPlaying = !bgm.paused || musicIntent;
+  musicDay = k;
+  trackList = todayTracks(now);
+  trackIdx = 0;
+  trackIsFriday = now.getDay() === 5;
+  fridayFallback = false;
+  bgm.loop = trackList.length === 1;          /* 1 lagu = loop terus; >1 lagu = bergantian lalu kembali ke lagu pertama */
+  if (!trackList.length) { bgm.pause(); bgm.removeAttribute('src'); updateAudioUI('off'); return; }
+  bgm.src = trackList[0];
+  if (wasPlaying) playAudio();
+}
+
+function updateAudioUI(state) {
+  const btn = $('bgmBtn'), lbl = $('bgmLabel');
+  btn.classList.remove('playing', 'err');
+  if (state === 'playing') { btn.classList.add('playing'); lbl.textContent = trackIsFriday ? 'Musik Jumat' : 'Musik On'; }
+  else if (state === 'azan') { lbl.textContent = 'Jeda · Azan'; }
+  else if (state === 'call') { lbl.textContent = 'Jeda · Panggilan'; }
+  else if (state === 'err') { btn.classList.add('err'); lbl.textContent = trackName() + ' Tdk Ada'; }
+  else { lbl.textContent = 'Musik Off'; }
+}
+function playAudio() {
+  if (azanLock || callBusy) return;   /* jangan menimpa suara azan / panggilan */
+  musicIntent = true;
+  bgm.volume = volMusic;
+  bgm.play().then(() => { if (!azanLock && !callBusy) updateAudioUI('playing'); }).catch(() => {
+    if (azanLock || callBusy) return;
+    if (bgm.error) updateAudioUI('err'); else updateAudioUI('off');
+  });
+}
+function toggleAudio() {
+  if (azanLock || callBusy) return;
+  if (bgm.paused) playAudio(); else { musicIntent = false; bgm.pause(); updateAudioUI('off'); }
+}
+bgm.addEventListener('error', () => {
+  if (!bgm.getAttribute('src')) return;
+  /* file lagu Jumat belum ada -> (opsional) pakai lagu biasa agar hari Jumat tidak sunyi */
+  if (trackIsFriday && !fridayFallback && CONFIG.MUSIC_JUMAT_FALLBACK && asList(CONFIG.MUSIC_BIASA).length) {
+    fridayFallback = true; trackIsFriday = false;
+    trackList = asList(CONFIG.MUSIC_BIASA); trackIdx = 0;
+    bgm.loop = trackList.length === 1;
+    bgm.src = trackList[0];
+    if (musicIntent) playAudio();
+    return;
+  }
+  updateAudioUI('err');
+});
+/* Saat lagu habis: SELALU diulang (lagu yang sama bila hanya 1 lagu; bila >1 lagu lanjut ke berikutnya lalu kembali ke awal) */
+bgm.addEventListener('ended', () => {
+  if (trackList.length > 1) {
+    trackIdx = (trackIdx + 1) % trackList.length;
+    bgm.src = trackList[trackIdx];
+  } else {
+    try { bgm.currentTime = 0; } catch (e) {}
+  }
+  if (azanLock || callBusy) return;
+  if (view === 5 && pauseMusicForVideo()) return;
+  playAudio();
+});
+/* Cadangan untuk TV/browser yang mengabaikan atribut loop: pantau sisa waktu lagu */
+bgm.addEventListener('timeupdate', () => {
+  if (trackList.length === 1 && bgm.duration > 0 && bgm.currentTime >= bgm.duration - 0.15 && !bgm.paused) {
+    try { bgm.currentTime = 0; } catch (e) {}
+  }
+});
+/* Watchdog: bila musik berhenti sendiri padahal tidak sedang dijeda oleh pengguna/azan/panggilan/video, nyalakan lagi */
+function musicWatchdog() {
+  const nowMs = Date.now();
+  if (nowMs - lastWatchdog < CONFIG.MUSIC_WATCHDOG_SEC * 1000) return;
+  lastWatchdog = nowMs;
+  if (!musicIntent || azanLock || callBusy) return;
+  if (view === 5 && pauseMusicForVideo()) return;
+  if (wasMusicPlayingBeforeVideo) return;
+  if (!trackList.length || !bgm.getAttribute('src') || bgm.error) return;
+  if (bgm.paused || bgm.ended) playAudio();
+}
+window.addEventListener('load', () => playAudio());
+function unlockFirstGesture(e) {
+  document.removeEventListener('pointerdown', unlockFirstGesture);
+  document.removeEventListener('keydown', unlockFirstGesture);
+  if (e.type === 'keydown' && String(e.key).toLowerCase() === 'a') return;
+  if (e.target && e.target.closest && e.target.closest('#bgmBtn')) return;
+  if (bgm.paused && (view !== 5 || !pauseMusicForVideo()) && !azanLock && !callBusy) playAudio();
+}
+document.addEventListener('pointerdown', unlockFirstGesture);
+document.addEventListener('keydown', unlockFirstGesture);
+
+/* =====================================================================
+   SLIDE 5: GALERI POSTER PENGHARGAAN
+   ===================================================================== */
+let photoIdx = 0;
+let photoTimer = null;
+
+function buildPhotoGallery() {
+  const wrap = $('pSlidesWrap'), thumbs = $('pThumbs'), bars = $('pBars');
+  if (!wrap) return;
+  bars.innerHTML = PHOTO_SLIDES.map(() => '<div class="p-seg"><i></i></div>').join('');
+  wrap.innerHTML = PHOTO_SLIDES.map((item, i) => `
+    <div class="p-slide ${i === 0 ? 'active' : ''}" id="pslide-${i}">
+      <img class="p-main-img" decoding="async" src="${item.src}" alt="${item.title}" onerror="if(!this.dataset.altExt){this.dataset.altExt='1';this.src=this.src.replace(/\\.png$/i,'.jpg');}">
+      <div class="p-caption">
+        <div><h3>${item.title}</h3><p>${item.desc}</p></div>
+        <div class="p-counter">SLIDE ${i + 1} / ${PHOTO_SLIDES.length}</div>
+      </div>
+    </div>`).join('');
+  thumbs.innerHTML = PHOTO_SLIDES.map((item, i) => `
+    <div class="p-thumb ${i === 0 ? 'active' : ''}" onclick="showPhotoSlide(${i}, true)" title="Poster ${i + 1}">
+      <img decoding="async" src="${item.src}" alt="Thumb ${i + 1}" onerror="if(!this.dataset.altExt){this.dataset.altExt='1';this.src=this.src.replace(/\\.png$/i,'.jpg');}">
+    </div>`).join('');
+}
+
+function showPhotoSlide(idx, resetTimer = false) {
+  const total = PHOTO_SLIDES.length;
+  if (!total) return;
+  const prevIdx = photoIdx;
+  photoIdx = ((idx % total) + total) % total;
+  const slides = document.querySelectorAll('.p-slide');
+  const thumbs = document.querySelectorAll('.p-thumb');
+  const segs = document.querySelectorAll('#pBars .p-seg');
+  slides.forEach((el, i) => {
+    el.classList.remove('active', 'leave');
+    if (i === prevIdx && i !== photoIdx) el.classList.add('leave');
+    else if (i === photoIdx) el.classList.add('active');
+  });
+  thumbs.forEach((el, i) => el.classList.toggle('active', i === photoIdx));
+  segs.forEach((seg, i) => {
+    seg.classList.remove('done', 'run');
+    const bar = seg.querySelector('i');
+    if (bar) bar.style.transitionDuration = CONFIG.PHOTO_EACH_SEC + 's';
+    void seg.offsetWidth;
+    if (i < photoIdx) seg.classList.add('done');
+    else if (i === photoIdx) seg.classList.add('run');
+  });
+  if (resetTimer) startPhotoLoop();
+}
+function startPhotoLoop() {
+  stopPhotoLoop();
+  showPhotoSlide(0, false);
+  photoTimer = setInterval(() => {
+    if (!paused && view === 4) showPhotoSlide(photoIdx + 1, false);
+  }, CONFIG.PHOTO_EACH_SEC * 1000);
+}
+function stopPhotoLoop() {
+  if (photoTimer) { clearInterval(photoTimer); photoTimer = null; }
+}
+
+/* =====================================================================
+   SLIDE 6: VIDEO
+   ===================================================================== */
+const tvVideo = $('tvVideo'), vidPhoto = $('vidPhoto');
+let vidIdx = 0, vidCand = 0, vidActive = false, vidMissTimer = null, vidImgMode = false, vidImgLeft = 0;
+const vidItem = i => CONFIG.VIDEO_LIST[i] || {};
+const vidSources = i => asList(vidItem(i).files);
+
+function loadVideo(i) {
+  vidIdx = i; vidCand = 0;
+  clearTimeout(vidMissTimer);
+  const item = vidItem(i), n = CONFIG.VIDEO_LIST.length;
+  vidImgMode = item.type === 'image';
+  $('vidBadgeText').textContent = item.label + (n > 1 ? ' · ' + (i + 1) + '/' + n : '');
+  $('vidFallback').style.display = 'none';
+  if (vidImgMode) {
+    /* ITEM FOTO: video dihentikan, foto tampil beberapa detik, musik latar menyala lagi */
+    tvVideo.pause(); tvVideo.removeAttribute('src');
+    try { tvVideo.load(); } catch (e) {}
+    tvVideo.style.display = 'none';
+    vidPhoto.style.display = 'block';
+    vidImgLeft = (item.seconds || 10) * 1000;
+    vidPhoto.src = encodeURI(vidSources(i)[0]);
+    if (CONFIG.VIDEO_WITH_SOUND && wasMusicPlayingBeforeVideo && !callBusy && !azanLock) playAudio();
+  } else {
+    /* ITEM VIDEO: foto disembunyikan, musik latar dijeda agar suara video terdengar */
+    vidPhoto.style.display = 'none'; vidPhoto.removeAttribute('src');
+    tvVideo.style.display = 'block';
+    if (CONFIG.VIDEO_WITH_SOUND && wasMusicPlayingBeforeVideo && !bgm.paused) { bgm.pause(); updateAudioUI(callBusy ? 'call' : 'off'); }
+    tvVideo.muted = CONFIG.VIDEO_WITH_SOUND ? !!callBusy : true;
+    tvVideo.src = encodeURI(vidSources(i)[0]);
+    playVideoEl();
+  }
+}
+function playVideoEl() {
+  tvVideo.play().catch(err => {
+    const nm = err && err.name;
+    if (nm === 'AbortError' || nm === 'NotSupportedError') return;   /* ditangani event error / pergantian file */
+    tvVideo.muted = true; tvVideo.play().catch(() => {});
+  });
+}
+function nextVideo() {
+  if (!vidActive) return;
+  if (vidIdx + 1 < CONFIG.VIDEO_LIST.length) loadVideo(vidIdx + 1);
+  else finishVideos();
+}
+function finishVideos() {
+  vidActive = false;
+  clearTimeout(vidMissTimer);
+  if (view === 5 && !azanLock) advanceCycle();
+}
+function showMissing(list) {
+  const isImg = vidImgMode;
+  $('vidFbTitle').textContent = (isImg ? 'File Foto Belum Ditemukan (' : 'File Video Belum Ditemukan (') + list[0] + ')';
+  $('vidFbName').textContent = list[0];
+  $('vidFallback').style.display = 'flex';
+  if (isImg) vidImgLeft = 1e9;                    /* jangan lanjut dulu: pesan tampil sebentar */
+  clearTimeout(vidMissTimer);
+  vidMissTimer = setTimeout(nextVideo, CONFIG.VIDEO_MISSING_SEC * 1000);
+}
+tvVideo.addEventListener('ended', () => { if (vidActive && !vidImgMode) nextVideo(); });
+tvVideo.addEventListener('error', () => {
+  if (!vidActive || vidImgMode || !tvVideo.getAttribute('src')) return;
+  const list = vidSources(vidIdx);
+  vidCand++;
+  if (vidCand < list.length) { tvVideo.src = encodeURI(list[vidCand]); playVideoEl(); return; }
+  showMissing(list);                              /* semua nama file gagal */
+});
+tvVideo.addEventListener('loadeddata', () => { $('vidFallback').style.display = 'none'; });
+vidPhoto.addEventListener('error', () => {
+  if (!vidActive || !vidImgMode || !vidPhoto.getAttribute('src')) return;
+  const list = vidSources(vidIdx);
+  vidCand++;
+  if (vidCand < list.length) { vidPhoto.src = encodeURI(list[vidCand]); return; }
+  showMissing(list);
+});
+vidPhoto.addEventListener('load', () => {
+  if (!vidActive || !vidImgMode) return;
+  $('vidFallback').style.display = 'none';
+  clearTimeout(vidMissTimer);
+  vidImgLeft = (vidItem(vidIdx).seconds || 10) * 1000;   /* hitung durasi tayang foto sejak foto tampil */
+});
+
+function startSlideVideo() {
+  if (!tvVideo) return;
+  if (pauseMusicForVideo()) {
+    wasMusicPlayingBeforeVideo = !bgm.paused;
+    if (callBusy && callMusicWas) { wasMusicPlayingBeforeVideo = true; callMusicWas = false; }
+    if (wasMusicPlayingBeforeVideo) { bgm.pause(); updateAudioUI(callBusy ? 'call' : 'off'); }
+  }
+  vidActive = true;
+  loadVideo(0);
+}
+function stopSlideVideo() {
+  if (!tvVideo) return;
+  vidActive = false;
+  clearTimeout(vidMissTimer);
+  tvVideo.pause();
+  if (wasMusicPlayingBeforeVideo) {
+    wasMusicPlayingBeforeVideo = false;
+    if (callBusy) callMusicWas = true; else playAudio();
+  }
+}
+
+/* =====================================================================
+   SLIDE 7: PETUGAS AZAN + JADWAL SHOLAT OTOMATIS
+   ===================================================================== */
+const PRAYERS = [['subuh','Subuh'],['zuhur','Zuhur'],['ashar','Ashar'],['maghrib','Maghrib'],['isya','Isya']];
+/* Cadangan (perkiraan) bila internet mati & belum ada cache. Alert otomatis TIDAK dijalankan memakai data ini. */
+const FALLBACK_TIMES = { subuh:'04:40', zuhur:'12:02', ashar:'15:14', maghrib:'18:09', isya:'19:19' };
+const ALERT_MS = () => CONFIG.AZAN_ALERT_MIN * 60000;
+
+let AZAN_DATA = Object.assign({}, AZAN_FALLBACK, lsGet('azan_data') || {});
+let azanSyncMsg = CONFIG.AZAN_API_URL ? 'Petugas: menghubungkan Spreadsheet…' : 'Petugas: data lokal (Spreadsheet belum dihubungkan)';
+let prayerToday = null, prayerOK = false, prayerDay = '', prayerLoading = false, prayerRetry = 0;
+let azanLock = null, musicBeforeAzan = false;
+const azanDone = {};      /* sudah dipicu */
+const azanFinished = {};  /* sudah selesai */
+let azanAudioState = 'idle';
+
+/* ---------- Variabel panggilan (petugas azan & pegawai) ---------- */
+let callBusy = false, callQueue = [], callCands = [], callIdx = 0;
+let callMusicWas = false, callTimer = null, callGoodExt = '';
+const callDone = {};      /* panggilan terjadwal yang sudah dipicu */
+
+const ymd = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+const hhmm = d => pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+function toDates(obj, base) {
+  const out = {};
+  PRAYERS.forEach(([k]) => {
+    const [h, m] = String(obj[k]).split(':').map(Number);
+    out[k] = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m, 0, 0);
+  });
+  return out;
+}
+function fmtCd(ms) {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  return pad2(Math.floor(s / 3600)) + ':' + pad2(Math.floor((s % 3600) / 60)) + ':' + pad2(s % 60);
+}
+
+async function fetchPrayerFor(date) {
+  const key = 'prayer_' + ymd(date);
+  const cached = lsGet(key);
+  if (cached) return cached;
+  const url = `https://api.aladhan.com/v1/timings/${pad2(date.getDate())}-${pad2(date.getMonth() + 1)}-${date.getFullYear()}` +
+              `?latitude=${CONFIG.LAT}&longitude=${CONFIG.LON}&method=${CONFIG.PRAYER_METHOD}&timezonestring=Asia/Jakarta`;
+  const res = await fetch(url);
+  const j = await res.json();
+  const t = j.data.timings;
+  const c = s => String(s).slice(0, 5);
+  const obj = { subuh: c(t.Fajr), zuhur: c(t.Dhuhr), ashar: c(t.Asr), maghrib: c(t.Maghrib), isya: c(t.Isha) };
+  lsSet(key, obj);
+  return obj;
+}
+
+async function loadPrayer() {
+  if (prayerLoading) return;
+  prayerLoading = true;
+  const now = new Date();
+  const dayKey = ymd(now);
+  try {
+    const s = await fetchPrayerFor(now);
+    prayerToday = toDates(s, now);
+    prayerOK = true;
+  } catch (e) {
+    if (!prayerToday || prayerDay !== dayKey) prayerToday = toDates(FALLBACK_TIMES, now);
+    prayerOK = false;
+    prayerRetry = Date.now() + 300000;
+  }
+  prayerDay = dayKey;
+  prayerLoading = false;
+  if (view === 6) renderAzan(new Date());
+}
+
+/* ---------- DOM slide azan ---------- */
+function buildAzanDOM() {
+  const meta = { zuhur: ['☀️', 'AZAN ZUHUR'], ashar: ['🌤️', 'AZAN ASHAR'] };
+  $('azGrid').innerHTML = ['zuhur', 'ashar'].map(p => `
+    <div class="az-card st-before" id="az-${p}">
+      <div class="az-top">
+        <div class="az-ico">${meta[p][0]}</div>
+        <div><div class="az-pn">${meta[p][1]}</div><div class="az-pt" id="az-${p}-time">--:--<small>WIB</small></div></div>
+        <div class="az-chip" id="az-${p}-chip">Menunggu</div>
+      </div>
+      <div class="az-body">
+        <div class="az-rip"><i></i><i></i><i></i></div>
+        <div class="az-lock">
+          <div class="lock-ico">🔒</div>
+          <div>Nama petugas tampil saat waktu azan tiba</div>
+          <div class="az-cd" id="az-${p}-cd">--:--:--</div>
+        </div>
+        <div class="az-reveal">
+          <small>PETUGAS ${meta[p][1]}</small>
+          <div class="az-name" id="az-${p}-name"></div>
+          <div class="az-role" id="az-${p}-role">Muazin hari ini</div>
+          <div class="az-wave">${Array.from({length: 22}, (_, i) => `<i style="--d:${i % 11}"></i>`).join('')}</div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  $('azTimes').innerHTML = PRAYERS.map(([k, n]) =>
+    `<div class="az-t" id="azt-${k}"><span class="az-t-n">${n}</span><b>--:--</b></div>`).join('');
+}
+
+function setAzName(p, text, hasData) {
+  const el = $('az-' + p + '-name');
+  el.classList.toggle('nodata', !hasData);
+  el.innerHTML = hasData
+    ? Array.from(text).map((ch, i) => `<span style="--i:${i}">${ch === ' ' ? '&nbsp;' : ch.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</span>`).join('')
+    : text;
+  $('az-' + p + '-role').style.display = hasData ? '' : 'none';
+}
+
+function resetAzanAnim() {
+  ['zuhur', 'ashar'].forEach(p => { const c = $('az-' + p); if (c) { c.dataset.nm = ''; c.dataset.st = ''; } });
+}
+
+function renderAzan(n) {
+  if (!prayerToday) return;
+  const entry = AZAN_DATA[ymd(n)] || null;
+
+  /* status tiap waktu sholat */
+  const info = {};
+  PRAYERS.forEach(([k]) => { info[k] = prayerState(k, n); });
+
+  /* banner */
+  const liveKey = PRAYERS.map(x => x[0]).find(k => info[k] === 'live');
+  const banner = $('azBanner');
+  if (liveKey) {
+    const nm = PRAYERS.find(x => x[0] === liveKey)[1];
+    banner.classList.add('live');
+    $('azBnLabel').textContent = 'WAKTU SHOLAT TELAH TIBA';
+    $('azBnTitle').textContent = '🔔 Waktu ' + nm + ' · ' + hhmm(prayerToday[liveKey]) + ' WIB';
+    $('azBnCd').textContent = 'SEKARANG';
+  } else {
+    banner.classList.remove('live');
+    let nk = PRAYERS.find(([k]) => info[k] === 'before');
+    let target, label;
+    if (nk) { target = prayerToday[nk[0]]; label = nk[1]; }
+    else { target = new Date(prayerToday.subuh.getTime() + 86400000); label = 'Subuh (besok)'; }
+    $('azBnLabel').textContent = 'MENUJU WAKTU SHOLAT BERIKUTNYA';
+    $('azBnTitle').textContent = label + ' · ' + hhmm(target) + ' WIB';
+    $('azBnCd').textContent = fmtCd(target - n);
+  }
+
+  /* kartu Zuhur & Ashar — NAMA PETUGAS SELALU TAMPIL (tidak terkunci) */
+  ['zuhur', 'ashar'].forEach(p => {
+    const card = $('az-' + p);
+    const st = info[p];
+    const t = prayerToday[p];
+    $('az-' + p + '-time').innerHTML = hhmm(t) + '<small>WIB</small>';
+    if (card.dataset.st !== st) {
+      card.dataset.st = st;
+      card.classList.remove('st-before', 'st-live', 'st-after');
+      card.classList.add('st-' + st);
+      $('az-' + p + '-chip').textContent = st === 'before' ? 'Menunggu' : (st === 'live' ? '🔔 SEDANG AZAN' : 'Selesai');
+    }
+    if (st === 'before') {
+      $('az-' + p + '-cd').textContent = fmtCd(t - n);
+    }
+    const nm = entry && entry[p] ? String(entry[p]) : '';
+    const sig = nm || '__none__';
+    if (card.dataset.nm !== sig) {
+      card.dataset.nm = sig;
+      if (nm) setAzName(p, nm, true);
+      else setAzName(p, 'Belum ada jadwal petugas', false);
+    }
+  });
+
+  /* deretan waktu sholat */
+  PRAYERS.forEach(([k]) => {
+    const el = $('azt-' + k);
+    el.querySelector('b').textContent = hhmm(prayerToday[k]);
+    el.classList.remove('past', 'next', 'live');
+    if (info[k] === 'live') el.classList.add('live');
+    else if (info[k] === 'after') el.classList.add('past');
+  });
+  const firstBefore = PRAYERS.find(([k]) => info[k] === 'before');
+  if (firstBefore && !liveKey) $('azt-' + firstBefore[0]).classList.add('next');
+
+  $('azStatus').textContent = azanSyncMsg + ' · Jadwal sholat: ' +
+    (prayerOK ? 'otomatis (Kemenag RI · Teluk Kuantan)' : 'perkiraan (offline, menunggu internet)') +
+    ' · Suara azan: ' + azanSoundText() +
+    ' · Panggilan: ' + (CONFIG.PANGGIL_ENABLED ? asList(CONFIG.PANGGIL_MENIT).join(' & ') + ' mnt sebelum azan + pegawai setelah azan' : 'dimatikan');
+}
+
+/* ---------- Status tiap waktu sholat ---------- */
+function prayerState(k, n) {
+  const t = prayerToday[k].getTime();
+  const key = ymd(n) + k;
+  if (n.getTime() < t) return 'before';
+  if (azanLock && azanLock.p === k) return 'live';
+  if (azanFinished[key]) return 'after';
+  return n.getTime() < t + ALERT_MS() ? 'live' : 'after';
+}
+
+/* ---------- Suara azan ---------- */
+const AZAN_SOUND_LABEL = {
+  idle: 'siap', ready: 'siap', playing: '🔊 sedang diputar', done: 'selesai',
+  off: 'dimatikan', missing: '⚠️ file tidak ditemukan', blocked: '⚠️ diblokir browser (klik layar sekali)'
+};
+let azanCand = { p: '', list: [], idx: 0, ok: false };
+function azanSoundList(p) { return asList(p === 'zuhur' ? CONFIG.AZAN_SOUND_ZUHUR : CONFIG.AZAN_SOUND_ASHAR); }
+function azanSoundText() {
+  if (azanAudioState === 'missing') return '⚠️ file tidak ditemukan (dicari: ' + azanCand.list.join(' / ') + ')';
+  return AZAN_SOUND_LABEL[azanAudioState] || azanAudioState;
+}
+/* Pasang sumber suara; bila nama file pertama tidak ada, otomatis dicoba nama berikutnya */
+function setAzanSource(p) {
+  if (azanCand.p === p && azanCand.ok) return true;
+  const list = azanSoundList(p);
+  azanCand = { p, list, idx: 0, ok: false };
+  if (!list.length) return false;
+  azanAudio.src = list[0];
+  return true;
+}
+function tryPlayAzan() {
+  azanAudio.play().then(() => { azanAudioState = 'playing'; }).catch(err => {
+    if (!azanLock) return;
+    const nm = err && err.name;
+    if (nm === 'AbortError' || nm === 'NotSupportedError') return;   /* ditangani event error / pergantian nama file */
+    azanAudioState = 'blocked';
+    azanSilentFallback();
+  });
+}
+azanAudio.addEventListener('loadeddata', () => {
+  azanCand.ok = true;
+  if (azanAudioState === 'idle' || azanAudioState === 'missing') azanAudioState = 'ready';
+});
+azanAudio.addEventListener('error', () => {
+  if (azanCand.idx + 1 < azanCand.list.length) {       /* coba nama file cadangan */
+    azanCand.idx++;
+    azanAudio.src = azanCand.list[azanCand.idx];
+    if (azanLock) tryPlayAzan();
+    return;
+  }
+  azanAudioState = 'missing';
+  azanSilentFallback();
+});
+azanAudio.addEventListener('ended', () => { azanAudioState = 'done'; if (azanLock) endAzanLock(); });
+
+function initAzanAudio() {
+  azanAudio.volume = volAzan;
+  if (!CONFIG.AZAN_SOUND_ENABLED) { azanAudioState = 'off'; return; }
+  setAzanSource('zuhur');             /* pra-muat + deteksi file hilang lebih awal */
+}
+/* Bila suara azan tidak bisa diputar: musik tetap diam sebentar, lalu kembali normal */
+function azanSilentFallback() {
+  if (!azanLock) return;
+  azanLock.until = Math.min(azanLock.until, azanLock.startedAt + CONFIG.AZAN_NO_AUDIO_MIN * 60000);
+}
+function playAzanSound(p) {
+  if (!CONFIG.AZAN_SOUND_ENABLED || !azanSoundList(p).length) { azanAudioState = 'off'; azanSilentFallback(); return; }
+  azanAudio.volume = volAzan;
+  setAzanSource(p);
+  try { azanAudio.currentTime = 0; } catch (e) {}
+  tryPlayAzan();
+}
+function stopAzanSound() {
+  try { azanAudio.pause(); azanAudio.currentTime = 0; } catch (e) {}
+  if (azanAudioState === 'playing') azanAudioState = 'ready';
+}
+
+/* =====================================================================
+   PANGGILAN: PETUGAS AZAN (5 & 1 MENIT SEBELUM AZAN) + PANGGILAN PEGAWAI (SETELAH AZAN)
+   File audio nama: arif / ikhlas / aldo / zikri / dimas / wahyu  (+ "panggilan pegawai")
+   Nama diambil dari Spreadsheet petugas azan, lalu dicocokkan dengan nama file.
+   ===================================================================== */
+function nameBases(nm) {
+  const s = String(nm).trim().toLowerCase();
+  const out = [s];
+  const noSp = s.replace(/\s+/g, '');
+  if (noSp && !out.includes(noSp)) out.push(noSp);
+  const f = s.split(/\s+/)[0];
+  if (f && !out.includes(f)) out.push(f);
+  return out;
+}
+function buildCands(bases) {
+  const exts = asList(CONFIG.PANGGIL_EXT).slice();
+  if (callGoodExt) exts.sort((a, b) => (b === callGoodExt) - (a === callGoodExt));
+  const out = [];
+  bases.forEach(b => exts.forEach(e => out.push(encodeURI(CONFIG.PANGGIL_FOLDER + b + '.' + e))));
+  return out;
+}
+function enqueueCall(item) {
+  if (!CONFIG.PANGGIL_ENABLED) return;
+  callQueue.push(item);
+  pumpCall();
+}
+function pumpCall() {
+  if (callBusy || azanLock) return;
+  const now = Date.now();
+  callQueue = callQueue.filter(x => x.exp > now);
+  const i = callQueue.findIndex(x => !x.at || x.at <= now);
+  if (i < 0) return;
+  startCall(callQueue.splice(i, 1)[0]);
+}
+function tryPlayCall() {
+  callAudio.play().then(() => {
+    const src = callCands[callIdx] || '';
+    const e = src.split('.').pop();
+    if (e) callGoodExt = e.toLowerCase();
+  }).catch(err => {
+    if (!callBusy) return;
+    const nm = err && err.name;
+    if (nm === 'AbortError' || nm === 'NotSupportedError') return;   /* ditangani event error */
+    finishCall(true);                                                /* diblokir browser: lewati */
+  });
+}
+function startCall(it) {
+  callBusy = true;
+  callMusicWas = callMusicWas || !bgm.paused;
+  if (!bgm.paused) bgm.pause();
+  updateAudioUI('call');
+  if (view === 5 && tvVideo) tvVideo.muted = true;
+  callCands = buildCands(it.bases);
+  callIdx = 0;
+  if (!callCands.length) { finishCall(true); return; }
+  callAudio.volume = volAzan;
+  callAudio.src = callCands[0];
+  tryPlayCall();
+  clearTimeout(callTimer);
+  callTimer = setTimeout(() => { if (callBusy) finishCall(true); }, CONFIG.PANGGIL_MAX_SEC * 1000);
+}
+function finishCall(resume) {
+  if (!callBusy) return;
+  callBusy = false;
+  clearTimeout(callTimer);
+  try { callAudio.pause(); } catch (e) {}
+  callAudio.removeAttribute('src');
+  try { callAudio.load(); } catch (e) {}
+  if (view === 5 && tvVideo) tvVideo.muted = !CONFIG.VIDEO_WITH_SOUND;
+  const m = callMusicWas;
+  callMusicWas = false;
+  if (!resume) return;
+  if (m && (view !== 5 || !pauseMusicForVideo()) && !azanLock) playAudio();
+  else if (!azanLock) updateAudioUI(bgm.paused ? 'off' : 'playing');
+  setTimeout(pumpCall, 400);
+}
+callAudio.addEventListener('ended', () => { if (callBusy) finishCall(true); });
+callAudio.addEventListener('error', () => {
+  if (!callBusy || !callAudio.getAttribute('src')) return;
+  callIdx++;
+  if (callIdx < callCands.length) { callAudio.src = callCands[callIdx]; tryPlayCall(); }
+  else finishCall(true);                       /* file tidak ditemukan: lewati diam-diam */
+});
+
+/* Jadwalkan panggilan nama petugas: X menit sebelum azan Zuhur & Ashar */
+function checkCallAlerts(n) {
+  if (!CONFIG.PANGGIL_ENABLED || !prayerOK || !prayerToday) return;
+  const entry = AZAN_DATA[ymd(n)];
+  if (!entry) return;
+  for (const p of ['zuhur', 'ashar']) {
+    const nm = entry[p];
+    if (!nm) continue;
+    const t = prayerToday[p].getTime();
+    for (const mnt of asList(CONFIG.PANGGIL_MENIT)) {
+      const trg = t - mnt * 60000;
+      const key = ymd(n) + p + 'call' + mnt;
+      if (callDone[key] || n.getTime() < trg) continue;
+      callDone[key] = true;
+      if (n.getTime() - trg <= CONFIG.PANGGIL_LATE_TOL_SEC * 1000 && n.getTime() < t) {
+        enqueueCall({ bases: nameBases(nm), exp: t });
+      }
+    }
+  }
+}
+
+/* ---------- Alert otomatis saat waktu azan ---------- */
+function checkAzanAlert(n) {
+  if (!CONFIG.AZAN_ALERT_ENABLED || !prayerOK || !prayerToday) return;
+  if (azanLock) {
+    if (n.getTime() >= azanLock.until) endAzanLock();
+    return;
+  }
+  for (const p of ['zuhur', 'ashar']) {
+    const t = prayerToday[p].getTime();
+    const key = ymd(n) + p;
+    if (azanDone[key] || n.getTime() < t) continue;
+    if (n.getTime() - t <= CONFIG.AZAN_LATE_TOL_SEC * 1000) { startAzanLock(key, p, n); break; }
+    azanDone[key] = true; azanFinished[key] = true;   /* terlambat (mis. halaman baru dibuka): lewati */
+  }
+}
+function startAzanLock(key, p, n) {
+  azanDone[key] = true;
+  /* bila panggilan sedang diputar, hentikan (azan lebih utama) */
+  const musicFromCall = callBusy && callMusicWas;
+  if (callBusy) finishCall(false);
+  /* cegah tabrakan: simpan status musik, hentikan video/galeri via showView */
+  musicBeforeAzan = wasMusicPlayingBeforeVideo || !bgm.paused || musicFromCall;
+  wasMusicPlayingBeforeVideo = false;
+  paused = false;
+  azanLock = { key, p, startedAt: n.getTime(), until: n.getTime() + CONFIG.AZAN_MAX_MIN * 60000 };
+  bgm.pause(); updateAudioUI('azan');       /* lagu diam selama azan */
+  showView(6);
+  holdTotal = CONFIG.AZAN_MAX_MIN * 60000;
+  holdTimer = holdTotal;
+  playAzanSound(p);
+}
+function releaseAzanLock(holdMusic) {
+  if (azanLock) azanFinished[azanLock.key] = true;
+  azanLock = null;
+  stopAzanSound();
+  if (musicBeforeAzan) {
+    musicBeforeAzan = false;
+    if (holdMusic) callMusicWas = true;       /* musik menunggu sampai panggilan pegawai selesai */
+    else playAudio();                         /* azan selesai: lagu hidup lagi */
+  } else updateAudioUI(bgm.paused ? 'off' : 'playing');
+}
+function endAzanLock() {
+  const willCall = CONFIG.PANGGIL_ENABLED;
+  releaseAzanLock(willCall);
+  showView(0);
+  /* setelah azan selesai: putar audio "panggilan pegawai" */
+  if (willCall) {
+    const now = Date.now();
+    enqueueCall({
+      bases: asList(CONFIG.PANGGIL_PEGAWAI_FILE),
+      at: now + CONFIG.PANGGIL_PEGAWAI_DELAY_SEC * 1000,
+      exp: now + 300000
+    });
+  }
+}
+
+function azanTick() {
+  applyMusicForToday();               /* ganti lagu otomatis saat pergantian hari (mis. Jumat) */
+  musicWatchdog();                    /* pastikan musik tetap berulang & tidak berhenti sendiri */
+  const n = new Date();
+  const k = ymd(n);
+  if (prayerDay !== k || (!prayerOK && Date.now() >= prayerRetry && !prayerLoading)) loadPrayer();
+  if (!prayerToday) return;
+  checkAzanAlert(n);
+  checkCallAlerts(n);
+  pumpCall();
+  if (view === 6) renderAzan(n);
+}
+
+async function syncAzan() {
+  if (!CONFIG.AZAN_API_URL) return;
+  try {
+    const res = await fetch(CONFIG.AZAN_API_URL);
+    const p = await res.json();
+    if (p && p.azan && typeof p.azan === 'object') {
+      AZAN_DATA = p.azan;
+      lsSet('azan_data', p.azan);
+      azanSyncMsg = 'Petugas: terhubung Spreadsheet · update ' +
+        new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
+    } else {
+      azanSyncMsg = 'Petugas: format data Spreadsheet tidak dikenali';
+    }
+  } catch (err) {
+    console.warn('Gagal sinkronisasi azan:', err);
+    azanSyncMsg = 'Petugas: gagal sinkron (menampilkan data terakhir)';
+  }
+  if (view === 6) renderAzan(new Date());
+}
+
+/* =====================================================================
+   HELPER KALENDER & DATA MATRIKS
+   ===================================================================== */
+function daysInMonth(year, m) { return new Date(year, m + 1, 0).getDate(); }
+function isRedDay(year, m, d) {
+  const w = new Date(year, m, d).getDay();
+  const extraLibur = HOLIDAYS_BULAN[m] || [];
+  return w === 0 || w === 6 || extraLibur.includes(d);
+}
+function dow(year, m, d) { return HARI[new Date(year, m, d).getDay()]; }
+function getRealNow() {
+  const now = new Date();
+  if (now.getFullYear() === CONFIG.YEAR) return { m: now.getMonth(), d: now.getDate() };
+  return { m: 10, d: 18 };
+}
+function getAvailableMonths() {
+  const keys = Object.keys(DATA_BULAN).map(k => parseInt(k, 10))
+    .filter(m => !isNaN(m) && Array.isArray(DATA_BULAN[m]) && DATA_BULAN[m].length > 0)
+    .sort((a, b) => a - b);
+  return keys.length ? keys : [getRealNow().m];
+}
+
+let activeMonth = getRealNow().m;
+let activeDay = getRealNow().d;
+let paused = false;
+
+function getD(m = activeMonth) { return DATA_BULAN[m] || []; }
+function monthHasEvents(m) { return getD(m).some(([, ev]) => ev && ev.length > 0); }
+function at(m, d) {
+  const r = [];
+  getD(m).forEach(([nm, ev]) => {
+    ev.forEach(([s, e, l, c]) => { if (d >= s && d <= e) r.push({ nm, l, c }); });
+  });
+  return r;
+}
+
+function buildMonthPills() {
+  const real = getRealNow();
+  const avail = getAvailableMonths();
+  $('monthsBar').innerHTML = avail.map(idx => {
+    const cls = ['m-pill', idx === activeMonth ? 'active' : '', idx === real.m ? 'now' : ''].filter(Boolean).join(' ');
+    return `<div class="${cls}" onclick="jumpToMonth(${idx})">${BULAN_NAMA[idx].toUpperCase()}</div>`;
+  }).join('');
+}
+
+function buildMatrix() {
+  const real = getRealNow();
+  const isCurrentMonth = (activeMonth === real.m);
+  const totalDays = daysInMonth(CONFIG.YEAR, activeMonth);
+  document.documentElement.style.setProperty('--days', totalDays);
+
+  $('hd').innerHTML =
+    '<div style="text-align:left;padding:.34rem .6rem">Nama Pegawai</div>' +
+    Array.from({ length: totalDays }, (_, i) => {
+      const d = i + 1;
+      const we = isRedDay(CONFIG.YEAR, activeMonth, d) ? 'we' : '';
+      const td = (isCurrentMonth && d === activeDay) ? 'td' : '';
+      return `<div class="${we} ${td}">${d}</div>`;
+    }).join('');
+
+  const rowsData = getD(activeMonth);
+  $('rows').innerHTML = rowsData.map(([nm, ev], i) => {
+    let h = `<div class="row"><div class="nm" style="grid-row:1"><b>${i + 1}</b>${nm}</div>`;
+    for (let d = 1; d <= totalDays; d++) {
+      const we = isRedDay(CONFIG.YEAR, activeMonth, d) ? 'we' : '';
+      const td = (isCurrentMonth && d === activeDay) ? 'td' : '';
+      h += `<div class="c ${we} ${td}" style="grid-column:${d + 1}"></div>`;
+    }
+    ev.forEach(([s, e, l, c], k) => {
+      const sClamped = Math.max(1, Math.min(totalDays, s));
+      const eClamped = Math.max(sClamped, Math.min(totalDays, e));
+      h += `<div class="e ${c}" style="grid-column:${sClamped + 1}/${eClamped + 2};animation-delay:${Math.min(i * 0.03 + k * 0.05, 1.2)}s" title="${l}">${l}</div>`;
+    });
+    return h + '</div>';
+  }).join('');
+
+  $('legend').innerHTML = Object.values(SEK)
+    .map(([n, c]) => `<span><i style="background:${c}"></i>${n}</span>`).join('');
+}
+
+function renderEventList(m, d, limit = 12) {
+  const a = at(m, d);
+  if (!a.length) return '<div class="none">Tidak ada kegiatan tercatat</div>';
+  return a.slice(0, limit).map((x, i) =>
+    `<div class="it" style="animation-delay:${i * 0.06}s"><span>${x.nm}</span><span class="tag ${x.c}" style="flex:none;max-width:54%;overflow:hidden;text-overflow:ellipsis">${x.l}</span></div>`
+  ).join('');
+}
+
+function buildAgenda() {
+  const real = getRealNow();
+  const isCurrentMonth = (activeMonth === real.m);
+  const totalDays = daysInMonth(CONFIG.YEAR, activeMonth);
+  const targetDay = isCurrentMonth ? activeDay : 1;
+
+  const a = at(activeMonth, targetDay);
+  const cntActiveToday = getD(activeMonth).filter(([, ev]) => ev.some(([s, e]) => targetDay >= s && targetDay <= e)).length;
+  const totalKegiatanBulan = getD(activeMonth).reduce((acc, [, ev]) => acc + ev.length, 0);
+
+  $('stat').innerHTML = `
+    <div><b>${cntActiveToday}</b>pegawai berkegiatan ${isCurrentMonth ? 'hari ini' : 'tgl ' + targetDay}</div>
+    <div><b>${getD(activeMonth).length - cntActiveToday}</b>di kantor / tanpa jadwal luar</div>
+    <div><b>${totalKegiatanBulan}</b>total agenda bulan ${BULAN_NAMA[activeMonth]}</div>
+    <div><b>${totalDays - targetDay}</b>hari tersisa di bulan ini</div>`;
+
+  const nx = [];
+  for (let d = targetDay + 1; d <= totalDays && nx.length < 2; d++) {
+    if (at(activeMonth, d).length) nx.push(d);
+  }
+  const sec = Object.entries(SEK).map(([k, [n, c]]) => ({ n, c, v: a.filter(x => x.c === k).length })).filter(x => x.v);
+
+  $('cols').innerHTML =
+    `<div class="card big"><h2>${isCurrentMonth ? 'Hari Ini · ' : ''}${dow(CONFIG.YEAR, activeMonth, targetDay)}, ${targetDay} ${BULAN_NAMA[activeMonth]}</h2><div class="sub">${a.length} kegiatan pegawai</div>${renderEventList(activeMonth, targetDay, 12)}</div>` +
+    nx.map(d =>
+      `<div class="card"><h2>${dow(CONFIG.YEAR, activeMonth, d)}, ${d} ${BULAN_SINGKAT[activeMonth]}</h2><div class="sub">${at(activeMonth, d).length} kegiatan · ${d - targetDay} hari lagi</div>${renderEventList(activeMonth, d, 10)}</div>`
+    ).join('') +
+    (nx.length < 2
+      ? `<div class="card"><h2>Rekap Per Seksi (${targetDay} ${BULAN_SINGKAT[activeMonth]})</h2><div class="sub">Distribusi kegiatan pegawai</div>${sec.map(s => `<div class="it"><span>${s.n}</span><b>${s.v} orang</b></div>`).join('') || '<div class="none">Belum ada kegiatan</div>'}</div>`
+      : '');
+
+  updateTicker();
+}
+
+function updateTicker() {
+  const real = getRealNow();
+  const totalDays = daysInMonth(CONFIG.YEAR, activeMonth);
+  const startD = (activeMonth === real.m) ? activeDay : 1;
+  const up = [];
+  for (let d = startD; d <= totalDays; d++) {
+    const g = {};
+    at(activeMonth, d).forEach(x => { g[x.l] = (g[x.l] || 0) + 1; });
+    Object.entries(g).forEach(([l, n]) => up.push(`${d} ${BULAN_SINGKAT[activeMonth]}: ${l} (${n} org)`));
+  }
+  const motoKuansing = '🏆 BPS Kab. Kuantan Singingi Raih 16 Penghargaan Terbaik dari BPS Provinsi Riau • Pertumbuhan Ekonomi 2025: 5,31% • Kemiskinan Turun ke 6,99% • IPG: 91,08 • Layanan Data Gratis: kuansingkab.bps.go.id';
+  const agendaTxt = up.length ? '📌 ' + up.join('   •   ') : `📌 Tidak ada agenda kegiatan tersisa untuk ${BULAN_NAMA[activeMonth]} ${CONFIG.YEAR}`;
+  const tk = $('tk');
+  tk.textContent = `${agendaTxt}      |      ${motoKuansing}`;
+  /* Kecepatan tetap (tidak tergantung panjang teks): TICKER_REM_PER_SEC x ukuran huruf dasar */
+  requestAnimationFrame(() => {
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    const dur = Math.max(40, Math.round(tk.scrollWidth / (rem * CONFIG.TICKER_REM_PER_SEC)));
+    if (tk.style.animationDuration !== dur + 's') tk.style.animationDuration = dur + 's';
+  });
+}
+
+/* Status Kepala + Avatar Foto */
+const KEPALA_LABEL = { CT: 'Cuti (CT)', WFH: 'WFH' };
+function renderAvatar(nm) {
+  if (CONFIG.KEPALA_PHOTO) {
+    return `<div class="av"><img decoding="async" src="${CONFIG.KEPALA_PHOTO}" alt="${nm}" onerror="if(!this.dataset.triedJpg){this.dataset.triedJpg='1';this.src='kepala.jpg';}else{this.parentElement.textContent='${nm[0]}';}"></div>`;
+  }
+  return `<div class="av">${nm[0]}</div>`;
+}
+
+function buildKepala() {
+  const rows = getD(activeMonth);
+  if (!rows.length) return;
+  const [nm, ev] = rows[0];
+  const real = getRealNow();
+  const isCurrentMonth = (activeMonth === real.m);
+
+  if (isCurrentMonth) {
+    const a = ev.filter(([s, e]) => activeDay >= s && activeDay <= e);
+    const nx = ev.find(([s]) => s > activeDay);
+    let cls, txt;
+    if (a.length) { cls = a[0][3]; txt = a.map(x => KEPALA_LABEL[x[2]] || x[2]).join(' + '); }
+    else if (isRedDay(CONFIG.YEAR, activeMonth, activeDay)) { cls = 'lb'; txt = 'Libur Akhir Pekan'; }
+    else { cls = 'rd'; txt = 'Ada di Kantor · Siap'; }
+    $('kp').innerHTML = `
+      ${renderAvatar(nm)}
+      <div><small>KEPALA BPS KAB. KUANTAN SINGINGI</small><b>${nm}</b></div>
+      <div class="st ${cls}"><span class="pulse-dot"></span>${txt}</div>
+      <div class="nx">${nx ? 'Berikutnya: <b style="font-size:.98rem;color:#c2410c">' + (KEPALA_LABEL[nx[2]] || nx[2]) + '</b><br>' + (nx[0] === nx[1] ? nx[0] : nx[0] + '–' + nx[1]) + ' ' + BULAN_SINGKAT[activeMonth] : 'Tidak ada agenda berikutnya bulan ini'}</div>`;
+  } else {
+    const summary = ev.length
+      ? ev.map(([s, e, l]) => `${s === e ? s : s + '–' + e} ${BULAN_SINGKAT[activeMonth]}: ${l}`).join(' • ')
+      : 'Ada di Kantor (Belum ada agenda luar)';
+    $('kp').innerHTML = `
+      ${renderAvatar(nm)}
+      <div><small>KEPALA BPS KAB. KUANTAN SINGINGI · PRATINJAU ${BULAN_NAMA[activeMonth].toUpperCase()}</small><b>${nm}</b></div>
+      <div class="st ${ev.length ? ev[0][3] : 'rd'}">${ev.length ? ev.length + ' Agenda Terjadwal' : 'Ada di Kantor'}</div>
+      <div class="nx" style="max-width:42%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${summary}">${summary}</div>`;
+  }
+}
+
+function setMonthAndDay(m, d) {
+  activeMonth = ((m % 12) + 12) % 12;
+  const maxD = daysInMonth(CONFIG.YEAR, activeMonth);
+  activeDay = Math.max(1, Math.min(maxD, d));
+  const real = getRealNow();
+  const isCurrentMonth = (activeMonth === real.m);
+
+  $('monthTitle').textContent = `${BULAN_NAMA[activeMonth].toUpperCase()} ${CONFIG.YEAR}`;
+  $('subInfo').textContent = isCurrentMonth
+    ? `Bulan Berjalan · ${dow(CONFIG.YEAR, activeMonth, activeDay)}, ${activeDay} ${BULAN_NAMA[activeMonth]} ${CONFIG.YEAR}`
+    : `Pratinjau ${BULAN_NAMA[activeMonth]} ${CONFIG.YEAR} (Bulan Aktif: ${BULAN_NAMA[real.m]})`;
+
+  buildMonthPills();
+  buildKepala();
+  buildMatrix();
+  buildAgenda();
+}
+
+function jumpToMonth(m) {
+  const real = getRealNow();
+  const d = (m === real.m) ? real.d : 1;
+  setMonthAndDay(m, d);
+  showView(0);
+}
+function getNextAvailableMonth(curr) {
+  const avail = getAvailableMonths();
+  const idx = avail.indexOf(curr);
+  if (idx === -1) return avail[0];
+  return avail[(idx + 1) % avail.length];
+}
+function updateClock() {
+  const d = new Date();
+  $('clock').innerHTML =
+    d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).replace(/\./g, ':') +
+    '<small>' + d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '</small>';
+}
+
+/* =====================================================================
+   ENGINE ANIMASI 7 SLIDE TV
+   0: Matriks · 1: Agenda · 2: Profil · 3: Infografis · 4: Poster · 5: Video · 6: Petugas Azan
+   ===================================================================== */
+const TOTAL_VIEWS = 7;
+let view = 0;
+let scrollPos = 0;
+let pauseTimer = 0;
+let holdTimer = 0;
+let holdTotal = 1;
+let lastTime = 0;
+
+function showView(v) {
+  /* jika pengguna pindah slide manual saat azan terkunci, lepas kuncinya */
+  if (azanLock && v !== 6) releaseAzanLock();
+
+  const prevView = view;
+  view = v;
+
+  for (let i = 0; i < TOTAL_VIEWS; i++) {
+    const el = $('v' + i);
+    if (el) el.classList.toggle('on', v === i);
+  }
+
+  if (prevView === 4 && v !== 4) stopPhotoLoop();
+  if (prevView === 5 && v !== 5) stopSlideVideo();
+
+  if (v === 0) {
+    scrollPos = 0; pauseTimer = 2200; $('rows').style.transform = 'translate3d(0,0,0)'; setProg(0);
+  } else if (v === 1) {
+    buildAgenda(); holdTotal = CONFIG.AGENDA_VIEW_SEC * 1000; holdTimer = holdTotal;
+  } else if (v === 2) {
+    holdTotal = CONFIG.INFO_VIEW_SEC * 1000; holdTimer = holdTotal;
+  } else if (v === 3) {
+    holdTotal = CONFIG.GALLERY_VIEW_SEC * 1000; holdTimer = holdTotal;
+  } else if (v === 4) {
+    holdTotal = PHOTO_SLIDES.length * CONFIG.PHOTO_EACH_SEC * 1000; holdTimer = holdTotal; startPhotoLoop();
+  } else if (v === 5) {
+    holdTotal = CONFIG.VIDEO_SAFETY_SEC * 1000; holdTimer = holdTotal; startSlideVideo();
+  } else if (v === 6) {
+    holdTotal = CONFIG.AZAN_VIEW_SEC * 1000; holdTimer = holdTotal;
+    resetAzanAnim();
+    renderAzan(new Date());
+  }
+}
+
+function advanceCycle() {
+  const real = getRealNow();
+  if (CONFIG.FOCUS_CURRENT_MONTH) {
+    if (activeMonth !== real.m) { setMonthAndDay(real.m, real.d); showView(0); return; }
+    if (view < TOTAL_VIEWS - 1) {
+      showView(view + 1);
+    } else {
+      const latest = getRealNow();
+      if (latest.m !== activeMonth || latest.d !== activeDay) setMonthAndDay(latest.m, latest.d);
+      showView(0);
+    }
+    return;
+  }
+  if (view === 0) {
+    if (activeMonth === real.m && monthHasEvents(activeMonth)) showView(1); else showView(2);
+  } else if (view < TOTAL_VIEWS - 1) {
+    showView(view + 1);
+  } else {
+    jumpToMonth(getNextAvailableMonth(activeMonth));
+  }
+}
+
+function loop(t) {
+  requestAnimationFrame(loop);
+  const el = t - lastTime;
+  if (el < CONFIG.FRAME_MS) return;      /* batasi FPS agar TV tidak berat */
+  const dt = Math.min(el, 100);
+  lastTime = t;
+
+  if (!paused) {
+    if (view === 0) {
+      const sc = $('sc'), rowsEl = $('rows');
+      const maxScroll = Math.max(0, rowsEl.offsetHeight - sc.clientHeight);
+      if (pauseTimer > 0) {
+        pauseTimer -= dt;
+        if (scrollPos === -1 && pauseTimer <= 0) { scrollPos = 0; advanceCycle(); }
+      } else {
+        scrollPos += dt * CONFIG.SCROLL_SPEED;
+        const pos = Math.min(scrollPos, maxScroll);
+        rowsEl.style.transform = 'translate3d(0,' + (-pos).toFixed(1) + 'px,0)';
+        setProg(maxScroll > 0 ? (pos / maxScroll) * 100 : 100);
+        if (pos >= maxScroll - 2) { pauseTimer = 1800; scrollPos = -1; }
+      }
+    } else {
+      holdTimer -= dt;
+      setProg(((holdTotal - holdTimer) / holdTotal) * 100);
+      if (view === 5 && vidActive) {
+        let frac = 0;
+        if (vidImgMode) {
+          const tot = (vidItem(vidIdx).seconds || 10) * 1000;
+          vidImgLeft -= dt;                                   /* hitung mundur tayang foto */
+          frac = Math.max(0, Math.min(1, 1 - vidImgLeft / tot));
+          if (vidImgLeft <= 0) nextVideo();
+        } else if (tvVideo.duration > 0) {
+          frac = tvVideo.currentTime / tvVideo.duration;
+        }
+        if (view === 5) setProg(((vidIdx + frac) / CONFIG.VIDEO_LIST.length) * 100);
+      }
+      if (azanLock && azanAudio.duration > 0 && !azanAudio.paused) setProg(azanAudio.currentTime / azanAudio.duration * 100);
+      /* saat azan terkunci, perpindahan slide diatur oleh azanTick (endAzanLock) */
+      if (holdTimer <= 0 && !azanLock) advanceCycle();
+    }
+  }
+}
+
+let lastSyncSig = '';
+async function syncSpreadsheet() {
+  if (!CONFIG.API_URL) return;
+  try {
+    const res = await fetch(CONFIG.API_URL);
+    const text = await res.text();
+    /* Hanya bangun ulang tampilan bila data benar-benar berubah (lebih ringan) */
+    if (text !== lastSyncSig) {
+      const payload = JSON.parse(text);
+      if (payload && typeof payload === 'object') {
+        const monthsData = payload.months || payload;
+        Object.entries(monthsData).forEach(([mKey, rows]) => {
+          const mIdx = parseInt(mKey, 10);
+          if (!isNaN(mIdx) && mIdx >= 0 && mIdx <= 11 && Array.isArray(rows) && rows.length) DATA_BULAN[mIdx] = rows;
+        });
+        if (payload.holidays && typeof payload.holidays === 'object') HOLIDAYS_BULAN = payload.holidays;
+      }
+      lastSyncSig = text;
+      buildMonthPills(); buildKepala(); buildMatrix();
+      if (view === 1) buildAgenda(); else updateTicker();
+    }
+    const jamSync = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    $('syncDot').className = 'dot-sync ok';
+    $('syncText').textContent = `Terhubung Spreadsheet · Update ${jamSync}`;
+  } catch (err) {
+    console.warn('Gagal sinkronisasi Spreadsheet:', err);
+    $('syncDot').className = 'dot-sync err';
+    $('syncText').textContent = 'Gagal Sinkronisasi (Menampilkan Data Terakhir)';
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === ' ') {
+    e.preventDefault();
+    paused = !paused;
+    if (view === 5 && tvVideo) paused ? tvVideo.pause() : tvVideo.play().catch(() => {});
+  } else if (e.key === 'ArrowRight') {
+    jumpToMonth(getNextAvailableMonth(activeMonth));
+  } else if (e.key === 'ArrowLeft') {
+    const avail = getAvailableMonths();
+    const idx = avail.indexOf(activeMonth);
+    jumpToMonth(avail[(idx - 1 + avail.length) % avail.length]);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault(); changeVol('music', 1);
+  } else if (e.key === 'ArrowDown') {
+    e.preventDefault(); changeVol('music', -1);
+  } else if (e.key === '+' || e.key === '=') {
+    changeVol('azan', 1);
+  } else if (e.key === '-' || e.key === '_') {
+    changeVol('azan', -1);
+  } else if (e.key.toLowerCase() === 'a') {
+    toggleAudio();
+  } else if (e.key.toLowerCase() === 's') {
+    showView((view + 1) % TOTAL_VIEWS);
+  } else if (CONFIG.AZAN_TEST_KEYS && (e.key.toLowerCase() === 't' || e.key.toLowerCase() === 'y')) {
+    if (!azanLock) startAzanLock('tes' + Date.now(), e.key.toLowerCase() === 't' ? 'zuhur' : 'ashar', new Date());
+  } else if (CONFIG.AZAN_TEST_KEYS && (e.key.toLowerCase() === 'u' || e.key.toLowerCase() === 'i')) {
+    /* tes panggilan nama petugas azan hari ini (U = Zuhur, I = Ashar) */
+    const en = AZAN_DATA[ymd(new Date())] || {};
+    const nm = en[e.key.toLowerCase() === 'u' ? 'zuhur' : 'ashar'];
+    if (nm) enqueueCall({ bases: nameBases(nm), exp: Date.now() + 300000 });
+  } else if (CONFIG.AZAN_TEST_KEYS && e.key.toLowerCase() === 'o') {
+    /* tes panggilan pegawai */
+    enqueueCall({ bases: asList(CONFIG.PANGGIL_PEGAWAI_FILE), exp: Date.now() + 300000 });
+  } else if (e.key.toLowerCase() === 'm') {
+    CONFIG.FOCUS_CURRENT_MONTH = !CONFIG.FOCUS_CURRENT_MONTH;
+  } else if (e.key === 'Escape') {
+    paused = false;
+    CONFIG.FOCUS_CURRENT_MONTH = true;
+    callQueue = [];
+    if (callBusy) finishCall(true);
+    const r = getRealNow();
+    jumpToMonth(r.m);
+  }
+});
+
+/* ---------- INISIALISASI ---------- */
+buildPhotoGallery();
+buildAzanDOM();
+const initNow = getRealNow();
+setMonthAndDay(initNow.m, initNow.d);
+updateClock();
+setInterval(updateClock, 1000);
+
+applyMusicForToday();
+playAudio();                        /* coba langsung menyalakan musik (jika browser mengizinkan) */
+initAzanAudio();
+
+prayerToday = toDates(FALLBACK_TIMES, new Date());
+loadPrayer();
+setInterval(azanTick, 1000);
+
+if (CONFIG.API_URL) {
+  syncSpreadsheet();
+  setInterval(syncSpreadsheet, CONFIG.SYNC_INTERVAL_SEC * 1000);
+}
+if (CONFIG.AZAN_API_URL) {
+  syncAzan();
+  setInterval(syncAzan, CONFIG.AZAN_SYNC_INTERVAL_SEC * 1000);
+}
+
+pauseTimer = 2200;
+requestAnimationFrame(t => { lastTime = t; loop(t); });
+</script>
+</body>
+</html>
